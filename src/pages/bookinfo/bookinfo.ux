@@ -1,0 +1,186 @@
+<template>
+	<div class="page">
+		<list class="list" style="padding: 86px 6px 6px 6px;">
+			<!-- 封面图片（如果有）作为列表的第一项 -->
+			<list-item if="{{hasCover}}" type="cover" style="height: 255px; align-items: center; justify-content: center; margin-bottom: 12px;">
+				<img src="{{coverPath}}" style="width: 160px;height: 213px;object-fit: cover;border-radius: 12px;" />
+			</list-item>
+			
+			<list-item class="item" type="info">
+				<text class="item-title">文件名</text>
+				<marquee class="item-value">{{fileName}}</marquee>
+			</list-item>
+			<list-item class="item" type="info">
+				<text class="item-title">文件大小</text>
+				<text class="item-value">{{fileSize}}</text>
+			</list-item>
+			<list-item class="item" type="info">
+				<text class="item-title">总字数</text>
+				<text class="item-value">{{wordCount}}</text>
+			</list-item>
+		</list>
+
+		<img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 336px;height: 102px;" />
+		<img static src="/common/images/back.png" @click="back" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
+		<text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
+			{{nowTime}}
+		</text>
+		<text style="position: absolute;left: 78px;top: 35px;width: 180px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">
+			书籍详情
+		</text>
+	</div>
+</template>
+
+<script>
+import router from '@system.router'
+import file from '@system.file'
+import prompt from '@system.prompt'
+
+function runAsyncFunc(func, params) {
+    return new Promise((resolve, reject) => func({
+        success: resolve,
+        fail: (data, code) => reject({data, code}),
+        ...params
+    }));
+}
+
+export default {
+	private: {
+		fileName: '加载中...',
+		fileSize: '加载中...',
+		wordCount: '加载中...',
+		nowTime: "00:00",
+		timer: null,
+		hasCover: false,
+		coverPath: ''
+	},
+	protected: {
+		cPath: '',
+		name: ''
+	},
+	updateTime() {
+		const date = new Date();
+		let hours = date.getHours();
+		let minutes = date.getMinutes();
+		hours = hours < 10 ? '0' + hours : hours;
+		minutes = minutes < 10 ? '0' + minutes : minutes;
+		this.nowTime = `${hours}:${minutes}`;
+	},
+	onInit() {
+		this.updateTime();
+		this.timer = setInterval(() => {
+			this.updateTime();
+		}, 1000);
+		this.loadFileInfo();
+	},
+	onDestroy() {
+		clearInterval(this.timer);
+	},
+	async loadFileInfo() {
+		const that = this;
+		const bookDirUri = `internal://files/books/${this.name}/`;
+		const bookInfoUri = `internal://files/books/${this.name}/book_info.json`;
+		const coverUri = `internal://files/books/${this.name}/cover.jpg`;
+
+		file.readText({
+			uri: bookInfoUri,
+			success: function(data) {
+				try {
+					const info = JSON.parse(data.text);
+					that.fileName = info.name || that.name;
+					that.wordCount = info.wordCount ? `${info.wordCount} 字` : '未知';
+					that.hasCover = info.hasCover || false;
+					if (that.hasCover) {
+						that.coverPath = coverUri;
+					}
+				} catch (e) {
+					that.fileName = that.name;
+					that.wordCount = '解析失败';
+				}
+			},
+			fail: function(data, code) {
+				that.fileName = that.name;
+				that.wordCount = '加载失败';
+			}
+		});
+
+
+		this.fileSize = '计算中...';
+		try {
+			const listResult = await runAsyncFunc(file.list, { uri: bookDirUri });
+			let totalSize = 0;
+			if (listResult.fileList) {
+				for (const f of listResult.fileList) {
+					if (f.type === 'file') {
+						totalSize += f.length;
+					}
+				}
+			}
+			this.fileSize = this.formatFileSize(totalSize);
+		} catch (e) {
+			this.fileSize = '计算失败';
+		}
+	},
+	formatFileSize(bytes) {
+		if (bytes === 0) return '0 Bytes';
+		const k = 1024;
+		const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+	},
+	formatTime(timestamp) {
+		if (!timestamp) return '未知';
+		const date = new Date(timestamp);
+		const year = date.getFullYear();
+		const month = ('0' + (date.getMonth() + 1)).slice(-2);
+		const day = ('0' + date.getDate()).slice(-2);
+		const hours = ('0' + date.getHours()).slice(-2);
+		const minutes = ('0' + date.getMinutes()).slice(-2);
+		return `${year}-${month}-${day} ${hours}:${minutes}`;
+	},
+	back() {
+		router.back();
+	}
+}
+</script>
+
+<style>
+.page {
+	width: 336px;
+	height: 480px;
+	background-color: #000000;
+}
+.list {
+	width: 336px;
+	height: 480px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+.item {
+	width: 100%;
+	height: 112px;
+	padding: 14px 20px;
+	margin-bottom: 8px;
+	background-color: #262626;
+	border-radius: 36px;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-around;
+}
+.item-title {
+	font-size: 28px;
+	line-height: 37px;
+	font-weight: bold;
+	color: rgba(255,255,255,0.6);
+}
+.item-value {
+	font-size: 32px;
+	line-height: 40px;
+	width: 100%;
+	font-weight: bold;
+	color: white;
+	text-overflow: ellipsis;
+	lines: 1;
+}
+</style>

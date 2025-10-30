@@ -1,0 +1,155 @@
+<template>
+	<div class="page" style="flex-direction: column;">
+
+	  <img if="{{fileList.length == 0}}" src="/common/images/empty.png"
+		  style="position: absolute;left: 104px;top: 146px;width: 128px;height: 128px;" />
+
+	  <text if="{{fileList.length == 0}}" style="position: absolute;left: 0px;top: 298px;width: 336px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">书架空空</text>
+
+	  <list class="list">
+		  <list-item for="{{fileList}}" class="item" @click="selectFile($item)" type="nook">
+			  <marquee class="itemtext">{{$item.name}}</marquee>
+			  <text class="itemtext2">{{$item.chapterCount}}章 · 进度 {{$item.progress || 0}}%</text>
+		  </list-item>
+	  </list>
+
+    <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 336px;height: 102px;" />
+    <img static src="/common/images/back.png" @click="exit" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
+    <img static src="/common/images/more.png" @click="routerTo('more')" style="position: absolute;left: 258px;top: 6px;width: 72px;height: 72px;"/>
+    <text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
+      {{nowTime}}
+    </text>
+    <text style="position: absolute;left: 78px;top: 35px;width: 180px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">
+      电子书
+    </text>
+
+    <img if="{{fileList.length == 0}}" src="/common/images/push.png" 
+      style="position: absolute;left: 258px;top: 402px;width: 72px;height: 72px;" @click="routerTo('push')"/>
+	</div>
+</template>
+
+<script>
+import router from '@system.router';
+import file from '@system.file';
+import storage from '../../common/storage.js';
+import app from '@system.app';
+import prompt from '@system.prompt';
+
+const INIT_PATH = "internal://files/books";
+
+export default {
+  private: {
+    fileList: [],
+    debugOutput: "初始化中...",
+    nowTime: "00:00",
+    timer: null
+  },
+  exit(){
+	  app.terminate();
+  },
+  updateTime() {
+    const date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    this.nowTime = `${hours}:${minutes}`;
+  },
+  onInit() {
+    this.updateTime();
+    this.timer = setInterval(() => {
+      this.updateTime();
+    }, 1000);
+  },
+  onDestroy(){
+	  clearInterval(this.timer);
+  },
+  onShow() {
+    this.loadFileList();
+  },
+  loadFileList() {
+    const that = this;
+    const bookshelfUri = INIT_PATH + '/bookshelf.json';
+    file.readText({
+        uri: bookshelfUri,
+        success: function(data) {
+            try {
+                that.fileList = JSON.parse(data.text);
+            } catch (e) {
+                that.fileList = [];
+            }
+        },
+        fail: function() {
+            that.fileList = [];
+        }
+    });
+  },
+
+  selectFile(item) {
+    router.push({
+        uri: '/pages/detail',
+        params: {
+            name: item.dirName
+        }
+    });
+  },
+
+  routerTo(page) {
+    router.push({
+      uri: `/pages/${page}`
+    });
+  }
+};
+
+</script>
+
+<style>
+.page {
+	width: 336px;
+	height: 480px;
+	background-color: #000000;
+}
+
+.list {
+	width: 336px;
+	height: 480px;
+	position: absolute;
+	top:0px;
+	left:0px;
+  padding: 86px 6px;
+}
+
+.item {
+	width: 100%;
+	height: 112px;
+	padding: 14px 20px;
+	margin-bottom: 8px;
+	background-color: #262626;
+	border-radius: 36px;
+	flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.itemtext {
+	font-size: 32px;
+	line-height:40px;
+	width: 100%;
+	font-weight: bold;
+	color: white;
+	text-overflow: ellipsis;
+	lines: 1;
+}
+
+.itemtext2 {
+	font-size: 24px;
+	line-height: 32px;
+	font-weight: bold;
+	color: rgba(255,255,255,0.6);
+	text-overflow: ellipsis;
+	lines: 1;
+}
+
+</style>

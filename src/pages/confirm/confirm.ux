@@ -1,0 +1,173 @@
+<template>
+    <div class="page">
+        <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 336px;height: 102px;" />
+        <img static src="/common/images/back.png" @click="back" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
+        <img static src="/common/images/delete.png" @click="confirmAction" style="position: absolute;left: 258px;top: 6px;width: 72px;height: 72px;"/>
+        <text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
+            {{nowTime}}
+        </text>
+        <text style="position: absolute;left: 78px;top: 35px;width: 180px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">
+            {{title}}
+        </text>
+
+        <img src="/common/images/bin.png" style="position: absolute;left: 104px;top: 146px;width: 128px;height: 128px;" />
+        <text style="position: absolute;left: 0px;top: 298px;width: 336px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">{{confirmText}}</text>
+        <text style="position: absolute;left: 0px;top: 340px;width: 336px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;padding:0 20px;">{{subText}}</text>
+    </div>
+</template>
+
+<script>
+import router from '@system.router'
+import prompt from '@system.prompt'
+import file from '@system.file'
+import storage from '../../common/storage.js'
+import bookStorage from '../../common/bookStorage.js'
+
+const BOOKSHELF_URI = 'internal://files/books/bookshelf.json';
+
+export default {
+    private: {
+        nowTime: "00:00",
+        timer: null,
+    },
+    protected: {
+        action: '',
+        cPath: '',
+        title: '请确认',
+        confirmText: '确认执行操作吗？',
+        subText: '此操作不可逆',
+        bookName: '',
+        bookmarkIndex: -1
+    },
+    updateTime() {
+        const date = new Date();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        this.nowTime = `${hours}:${minutes}`;
+    },
+    onInit() {
+        this.updateTime();
+        this.timer = setInterval(() => {
+            this.updateTime();
+        }, 1000);
+    },
+    onDestroy() {
+        clearInterval(this.timer);
+    },
+    back() {
+        router.back();
+    },
+    confirmAction() {
+        switch (this.action) {
+            case 'deleteBook':
+                this.deleteBook();
+                break;
+            case 'clearBookshelf':
+                this.clearBookshelf();
+                break;
+            case 'deleteBookmark':
+                this.deleteBookmark();
+                break;
+            default:
+                prompt.showToast({ message: '未知操作' });
+                router.back();
+        }
+    },
+    async deleteBookmark() {
+        if (!this.bookName || this.bookmarkIndex < 0) {
+            prompt.showToast({ message: '参数错误' });
+            router.back();
+            return;
+        }
+
+        try {
+            const progress = await bookStorage.get(this.bookName);
+            if (progress.bookmarks && progress.bookmarks[this.bookmarkIndex] !== undefined) {
+                progress.bookmarks.splice(this.bookmarkIndex, 1);
+                await bookStorage.set(this.bookName, progress);
+                prompt.showToast({ message: '删除成功' });
+                router.back();
+            } else {
+                prompt.showToast({ message: '找不到书签' });
+                router.back();
+            }
+        } catch (e) {
+            prompt.showToast({ message: '删除失败' });
+            router.back();
+        }
+    },
+    deleteBook() {
+        if (!this.cPath) {
+            prompt.showToast({ message: '参数错误' });
+            router.back();
+            return;
+        }
+        const that = this;
+        const dirName = this.cPath.split('/').pop();
+
+        file.rmdir({
+            uri: this.cPath,
+            recursive: true,
+            success: function() {
+                that.updateBookshelf(dirName);
+            },
+            fail: (data, code) => {
+                prompt.showToast({ message: `删除失败: ${code}`, duration: 1000 });
+                router.back();
+            }
+        });
+    },
+    updateBookshelf(dirName) {
+        file.readText({
+            uri: BOOKSHELF_URI,
+            success: function(data) {
+                try {
+                    const bookshelf = JSON.parse(data.text);
+                    const newBookshelf = bookshelf.filter(b => b.dirName !== dirName);
+                    file.writeText({
+                        uri: BOOKSHELF_URI,
+                        text: JSON.stringify(newBookshelf),
+                        complete: function() {
+                            prompt.showToast({ message: '删除成功', duration: 1000 });
+                            router.replace({ uri: '/pages/index' });
+                        }
+                    });
+                } catch (e) {
+                     prompt.showToast({ message: '删除成功', duration: 1000 });
+                     router.replace({ uri: '/pages/index' });
+                }
+            },
+            fail: function() {
+                prompt.showToast({ message: '删除成功', duration: 1000 });
+                router.replace({ uri: '/pages/index' });
+            }
+        });
+    },
+    clearBookshelf() {
+        file.rmdir({
+            uri: 'internal://files/books/',
+            recursive: true,
+            complete: () => {
+                storage.clear({
+                    complete: function() {
+                        prompt.showToast({ message: '清空成功', duration: 1000 });
+                        router.back();
+                    }
+                });
+            }
+        });
+    }
+}
+</script>
+
+<style>
+.page {
+    width: 336px;
+    height: 480px;
+    background-color: #000000;
+    flex-direction: column;
+    align-items: center;
+}
+</style>
