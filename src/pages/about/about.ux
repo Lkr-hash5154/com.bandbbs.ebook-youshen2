@@ -2,18 +2,9 @@
 	<div class="page">
   
 	  <img src="/common/images/about.png" style="position: absolute;left: 0px;top: 0px;"/>
-	  <img src="/common/images/back.png" @click="back" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
+	  <img src="/common/images/back.png" @click="back" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
     <!-- <img static src="/common/images/info.png" @click="routeAbout" style="position: absolute;left: 258px;top: 6px;width: 72px;height: 72px;"/> -->
-    <text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
-      {{nowTime}}
-    </text>
-    <text style="position: absolute;left: 78px;top: 35px;width: 180px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">
-      {{bigTitle}}
-    </text>
-    <text style="position: absolute;left: 26px;top: 102px;width: 282px;height: 48px;font-size: 36px;font-weight: bold;color: #FFFFFF;">
-      弦{{appName}}
-    </text>
-    <text style="position: absolute;left: 26px;top: 154px;width: 204px;height: 48px;font-size: 36px;font-weight: bold;color: rgba(255, 255, 255, 0.6);">
+    <text style="position: absolute;left: 26px;top: 150px;width: 90px;height: 48px;font-size: 24px;font-weight: bold;color: rgba(255, 255, 255, 0.6);">
       {{appVer}}
     </text>
 	</div>
@@ -79,8 +70,8 @@
   
   <style>
   .page {
-	  width: 336px;
-	  height: 480px;
+	  width: 192px;
+	  height: 490px;
 	  background-color: #000000;
   }
   

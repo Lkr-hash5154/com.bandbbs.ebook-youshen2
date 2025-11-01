@@ -1,28 +1,12 @@
 <import name="number" src="../../components/number_choose/number_choose"></import>
 <template>
   <div class="page" style="flex-direction: column;">
-
-	<div class="item">
-		<text style="font-size: 24px;font-weight:bold;color: rgba(255, 255, 255, 0.6);text-align: center;margin-bottom:80px">长按文本以启动自动翻页</text>
-
-		<img static src="/common/images/Switch_ON.png" style="width: 113px;height: 80px;" @click="onClick" if="{{enable}}"/>
-		<img static src="/common/images/Switch_OFF.png" style="width: 113px;height: 80px;" @click="onClick" else/>
-		<text style="font-size: 36px;font-weight:bold;color: white;width: 100%;text-align: center;">
-			{{enable ? 'ON' : 'OFF'}}
-		</text>
-	</div>
-
-
-	<number style="position: absolute;bottom:6px" max="60" min="1" step="1" unit="s" value="{{speed}}" @change="change" name="间隔时间"></number>
-
-
-	<img static src="/common/images/back.png" @click="back" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
-	<text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
-	  {{nowTime}}
-	</text>
-	<text style="position: absolute;left: 78px;top: 35px;width: 180px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">
-		自动翻页
-	</text>
+	<img static src="/common/images/back.png" @click="back('')" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
+	<text style="position: absolute;left: 0px;top: 84.6px;width: 192px;height: 42px;font-size: 32px;font-weight: bold;color: white;text-align: center;">自动翻页</text>
+	<text style="position: absolute;left: 0px;top: 366.2px;width: 192px;height: 42px;font-size: 32px;font-weight: bold;color: white;text-align: center;">开关</text>
+	<img static src="/common/images/Switch_ON.png" style="position: absolute;left: 45px;top: 410px;width: 102px;height: 72px;" @click="onClick" if="{{enable}}"/>
+	<img static src="/common/images/Switch_OFF.png" style="position: absolute;left: 45px;top: 410px;width: 102px;height: 72px;" @click="onClick" else/>
+	<number style="position: absolute; top: 139.6px;" max="60" min="1" step="1" unit="s" value="{{speed}}" @change="change"></number>
   </div>
 </template>
 
@@ -38,25 +22,8 @@ export default {
   private: {
 		speed: 10,
 		enable: false,
-		nowTime: "00:00",
-		timer: null
   },
-  updateTime() {
-		const date = new Date();
-		let hours = date.getHours();
-		let minutes = date.getMinutes();
-
-		// 格式化小时和分钟为两位数
-		hours = hours < 10 ? '0' + hours : hours;
-		minutes = minutes < 10 ? '0' + minutes : minutes;
-
-		this.nowTime = `${hours}:${minutes}`;
-	},
   onInit() {
-	this.updateTime();
-	this.timer = setInterval(() => {
-		this.updateTime();
-	}, 1000);
     storage.get({
       key: 'EBOOK_AUTO',
       success: (data) => {
@@ -70,12 +37,6 @@ export default {
 	//       that.onUpdate();
     // }, 50);
   },
-  onDestroy(){
-	  if (this.timer) {
-		  clearInterval(this.timer);
-		  this.timer = null;
-	  }
-	},
   change(e){
 	  this.speed = e.detail.value;
 	  this.save()
@@ -91,12 +52,12 @@ export default {
 	},
   onClick(){
 	  this.enable = !this.enable;
-	//   if(this.enable){
-	// 	  prompt.showToast({
-	// 		  message: '开启自动翻页',
-	// 		  duration: 1000
-	// 	  })
-	//   }
+	  if(this.enable){
+		  prompt.showToast({
+			  message: '长按文本以启动自动翻页',
+			  duration: 1000
+		  })
+	  }
 	  this.save()
   }
 }
@@ -104,8 +65,8 @@ export default {
 
 <style>
 .page {
-	width: 336px;
-	height: 480px;
+	width: 192px;
+	height: 490px;
 	background-color: #000000;
 }
 
@@ -135,16 +96,12 @@ export default {
 
 .item {
 	position: absolute;
-	left: 6px;
-	top: 86px;
+	top:72px;
+	left:6px;
+	height: 102px;
 	width: 324px;
-	height: 308px;
-	border-radius: 36px;
-	flex-direction: column;
-	border: 3px solid #262626;
-	align-items: center;
-	justify-content: space-between;
 	padding: 20px;
+	flex-direction: row;
 }
 
 .itemtext {

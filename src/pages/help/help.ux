@@ -34,8 +34,8 @@ export default {
 
 <style>
 .page {
-	width: 336px;
-	height: 480px;
+	width: 192px;
+	height: 490px;
 	background-color: #000000;
 	flex-direction: column;
 	justify-content: center;
@@ -45,7 +45,7 @@ export default {
 .tip-title {
 	font-size: 36px;
 	font-weight: bold;
-	color: #FFFFFF;
+	color: #DC4D4F;
 	text-align: center;
 	margin-bottom: 40px;
 }
@@ -57,7 +57,7 @@ export default {
 	margin-bottom: 60px;
 }
 .confirm-button {
-	width: 102px;
-	height: 72px;
+	width: 40px;
+	height: 40px;
 }
 </style>

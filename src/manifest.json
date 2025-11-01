@@ -52,7 +52,7 @@
   ],
   "config": {
     "logLevel": "log",
-    "designWidth": 336
+    "designWidth": 192
   },
   "router": {
     "entry": "pages/index",
@@ -114,6 +114,9 @@
       },
       "pages/screenBrightness": {
         "component": "screenBrightness"
+      },
+      "pages/marginSetting": {
+        "component": "marginSetting"
       },
       "pages/list": {
         "component": "list"

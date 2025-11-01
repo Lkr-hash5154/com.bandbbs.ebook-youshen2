@@ -5,98 +5,92 @@
 		  <list-item class="item" @click="routerTo('opacity')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">字体亮度</text>
-				  <text class="itemtext2">设置阅读字体亮度</text>
+				  <marquee class="itemtext2">设置阅读字体亮度</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('screenBrightness')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">屏幕亮度</text>
-				  <text class="itemtext2">应用内屏幕亮度</text>
+				  <marquee class="itemtext2">应用内屏幕亮度</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('fontSetting')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">字号</text>
-				  <text class="itemtext2">设置阅读字体大小</text>
+				  <marquee class="itemtext2">设置阅读字体大小</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
-		  <list-item class="item" @click="routerTo('marginSetting')" type="item">
+		  <!--<list-item class="item" @click="routerTo('marginSetting')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">垂直边距</text>
-				  <text class="itemtext2">调整屏幕留白</text>
+				  <marquee class="itemtext2">调整屏幕留白</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
+		  </list-item>!-->
 		  <list-item class="item" @click="routerTo('swipe')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">滑动翻页</text>
-				  <text class="itemtext2">管理滑动翻页选项</text>
+				  <marquee class="itemtext2">管理滑动翻页选项</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('autoRead')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">自动翻页</text>
-				  <text class="itemtext2">设置自动翻页选项</text>
+				  <marquee class="itemtext2">设置自动翻页选项</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('teacherScreen')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">老师屏</text>
-				  <text class="itemtext2">快速退出应用</text>
+				  <marquee class="itemtext2">快速退出应用</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="toggleProgressBar" type="item">
 			  <div class="item-content">
-				  <text class="itemtext">章节进度条</text>
-				  <text class="itemtext2">显示阅读进度条</text>
+				  <marquee class="itemtext">章节进度条</marquee>
+				  <marquee class="itemtext2">显示阅读进度条</marquee>
 			  </div>
-			  <img src="{{showProgressBar ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 40px;"/>
+			  <img src="{{showProgressBar ? '/common/images/on.png' : '/common/images/off.png'}}" style="width:40px;height: 28px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('pageSizeSetting')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">分段大小</text>
-				  <text class="itemtext2">翻页加载的文本量</text>
+				  <marquee class="itemtext2">翻页加载的文本量</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="clearBooks" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">清空书架</text>
-				  <text class="itemtext2">清空全部数据</text>
+				  <marquee class="itemtext2">清空全部数据</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('push')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">书籍同步</text>
-				  <text class="itemtext2">连接手机同步内容</text>
+				  <marquee class="itemtext2">连接手机同步内容</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('about')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">关于</text>
-				  <text class="itemtext2">关于电子书</text>
+				  <marquee class="itemtext2">关于电子书</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 	  </list>
   
 	  
-	  <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 336px;height: 102px;" />
-	  <img static src="/common/images/back.png" @click="back" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
-	  <text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
-		{{nowTime}}
-	  </text>
-	  <text style="position: absolute;left: 78px;top: 35px;width: 180px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">
-		  设置
-	  </text>
+	  <img static src="/common/images/mask_up.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 118px;" />
+	  <img static src="/common/images/back.png" @click="back" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
 	</div>
   </template>
   
@@ -195,18 +189,18 @@
   
   <style>
   .page {
-	  width: 336px;
-	  height: 480px;
+	  width: 192px;
+	  height: 490px;
 	  background-color: #000000;
   }
   
   .more-info {
-	width: 335px;
+	width: 191px;
 	background-color: rgb(0,0,0);
   }
   
   .caltext {
-	  width: 320px;
+	  width: 176px;
 	  lines: 4;
 	  text-overflow: clip;
 	  font-size: 30px;
@@ -216,17 +210,17 @@
   }
   
   .list {
-	  width: 336px;
-	  height: 480px;
+	  width: 192px;
+	  height: 490px;
 	  position: absolute;
 	  top:0px;
 	  left:0px;
-	padding: 86px 6px;
+	padding: 66px 0px;
   }
   
   .item {
 	  width: 100%;
-	  height: 112px;
+	  height: 109px;
 	  padding: 14px 20px;
 	  margin-bottom: 8px;
 	  background-color: #262626;
@@ -236,8 +230,8 @@
   }
   
   .itemtext {
-	  font-size: 32px;
-	  line-height:40px;
+	  font-size: 24px;
+	  line-height:55px;
 	  width: 100%;
 	  font-weight: bold;
 	  color: white;
@@ -246,7 +240,7 @@
   }
   
   .itemtext2 {
-	  font-size: 28px;
+	  font-size: 20px;
 	  line-height: 37px;
 	  font-weight: bold;
 	  color: rgba(255,255,255,0.6);

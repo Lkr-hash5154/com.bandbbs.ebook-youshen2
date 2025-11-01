@@ -29,8 +29,8 @@
 	  </div>
   
   
-	  <img static src="/common/images/back.png" @click="back" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
-	  <img static src="/common/images/conform.png" @click="onClick('conform')" style="position: absolute;left: 258px;top: 6px;width: 72px;height: 72px;"/>
+	  <img static src="/common/images/back.png" @click="back" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
+	  <img static src="/common/images/conform.png" @click="onClick('conform')" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
 	  <text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
 		{{nowTime}}
 	  </text>
@@ -172,18 +172,18 @@
   
   <style>
   .page {
-	  width: 336px;
-	  height: 480px;
+	  width: 192px;
+	  height: 490px;
 	  background-color: #000000;
   }
   
   .more-info {
-	width: 335px;
+	width: 192px;
 	background-color: rgb(0,0,0);
   }
   
   .caltext {
-	  width: 320px;
+	  width: 176px;
 	  lines: 4;
 	  text-overflow: clip;
 	  font-size: 30px;
@@ -193,8 +193,8 @@
   }
   
   .list {
-	  width: 336px;
-	  height: 400px;
+	  width: 192px;
+	  height: 410px;
 	  position: absolute;
 	  top:72px;
   }
@@ -203,7 +203,7 @@
 	  position: absolute;
 	  left: 6px;
 	  top: 86px;
-	  width: 324px;
+	  width: 180px;
 	  height: 115px;
 	  border-radius: 36px;
 	  flex-direction: column;
@@ -228,7 +228,7 @@
   
   .row {
 	  position:absolute;
-	  width:336px;
+	  width:192px;
 	  height:64px;
 	  padding:0px 6px;
 	  justify-content: space-between;
