@@ -78,7 +78,23 @@
         const listUri = `internal://files/books/${this.name}/list.txt`;
         try {
             const listData = await new Promise((resolve, reject) => file.readText({ uri: listUri, success: resolve, fail: reject }));
-            this.allChapters = listData.text.split('\n').filter(Boolean).map(JSON.parse);
+            const lines = listData.text.split('\n').filter(Boolean);
+            
+            
+            const chapterMap = new Map();
+            for (const line of lines) {
+                try {
+                    const chapter = JSON.parse(line);
+                    if (chapter.index !== null && chapter.index !== undefined) {
+                        chapterMap.set(chapter.index, chapter);
+                    }
+                } catch (e) {
+                    
+                }
+            }
+            
+            
+            this.allChapters = Array.from(chapterMap.values()).sort((a, b) => a.index - b.index);
             this.totalChapters = this.allChapters.length;
         } catch (e) {
             this.allChapters = [];
