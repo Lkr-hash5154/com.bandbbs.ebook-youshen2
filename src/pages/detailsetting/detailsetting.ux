@@ -22,6 +22,12 @@
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
+		  <list-item type="item" class="item" @click="backToFirst">
+			  <div class="item-content">
+			  	<text class="itemtext">回到第一段</text>
+			  	<marquee class="itemtext2">跳转到本章开头</marquee>
+			  </div>
+		  </list-item>
 		  <list-item class="item" @click="routerTo('screenBrightness')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">屏幕亮度</text>
@@ -174,6 +180,20 @@
 		uri: '/pages/' + url,
 		params: { name: this.name }
 	  })
+	},
+		async backToFirst(){
+		try {
+			const progress = await bookStorage.get(this.name);
+			progress.offsetInChapter = 0;
+			progress.scrollOffset = 0;
+			await bookStorage.set(this.name, progress);
+			
+			prompt.showToast({ message: '已跳转到第一段', duration: 1500 });
+			globalThis.justJumpedFromPageNumber = true;
+			router.back();
+		} catch (e) {
+			prompt.showToast({ message: '跳转失败', duration: 2000 });
+		}
 	},
 	back(){
 		router.back();

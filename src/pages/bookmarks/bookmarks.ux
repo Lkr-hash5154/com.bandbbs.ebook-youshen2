@@ -1,17 +1,17 @@
 <template>
   <div class="page" style="flex-direction: column;">
-    <img if="{{allBookmarks.length === 0}}" src="/common/images/empty.png" style="position: absolute;left: 64px;top: 146px;width: 128px;height: 128px;" />
-    <text if="{{allBookmarks.length === 0}}" style="position: absolute;left: 0px;top: 298px;width: 192px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">暂无书签</text>
+    <img if="{{allBookmarks.length === 0}}" src="/common/images/empty.png" style="position: absolute;left: 104px;top: 146px;width: 128px;height: 128px;" />
+    <text if="{{allBookmarks.length === 0}}" style="position: absolute;left: 0px;top: 298px;width: 336px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">暂无书签</text>
 
     <list class="list" if="{{allBookmarks.length > 0}}">
       <list-item for="{{visibleBookmarks}}" class="item" type="bookmark">
         <div class="text-content" @click="jumpTo($idx)">
-          <marquee class="itemtext" scrollamount="12">{{$item.name}}</marquee>
-          <text class="itemtext2">{{formatBookmarkLocation($item)}} | {{formatTime($item.time)}}</text>
+          <marquee class="itemtext" scrollamount="20">{{$item.name}}</marquee>
+          <marquee class="itemtext2" scrollamount="50">{{formatBookmarkLocation($item)}} | {{formatTime($item.time)}}</marquee>
         </div>
         <div class="button-container">
           <img src="/common/images/edit.png" @click="editBookmark($idx)" style="width: 72px; height: 72px;" />
-          <img src="/common/images/delete.png" @click="deleteBookmark($idx)" style="width: 72px ; height: 72px;" />
+          <img src="/common/images/delete.png" @click="deleteBookmark($idx)" style="width: 72px; height: 72px;" />
         </div>
       </list-item>
       <list-item type="pagination" class="pagination-container" if="{{totalPages > 1}}">

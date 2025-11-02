@@ -238,6 +238,14 @@ export default class interconnfile {
             const coverUri = bookUri + '/cover.jpg';
             const contentUri = bookUri + '/content';
             const bookshelfUri = this.baseUri + 'bookshelf.json';
+            try {
+                const bookInfoData = await runAsyncFunc(file.readText, { uri: bookInfoUri });
+                const bookInfo = JSON.parse(bookInfoData.text);
+                if (bookInfo.hasCover && !hasCover) {
+                    hasCover = true;
+                }
+            } catch (e) {
+            }
 
             if (startFrom === 0) {
                 let progress = null;
