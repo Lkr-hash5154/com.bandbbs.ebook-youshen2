@@ -2,7 +2,7 @@
 	<div class="page">
 		<list class="list" style="padding: 86px 6px 6px 6px;">
 			<!-- 封面图片（如果有）作为列表的第一项 -->
-			<list-item if="{{hasCover}}" type="cover" style="height: 200px; align-items: center; justify-content: center; margin-bottom: 12px;">
+			<list-item if="{{hasCover}}" type="cover" style="height: 192px; align-items: center; justify-content: center; margin-bottom: 12px;">
 				<img src="{{coverPath}}" style="width: 120px;height: 160px;object-fit: cover;border-radius: 12px;" />
 			</list-item>
 			
@@ -47,12 +47,12 @@
 			</list-item>
 		</list>
 
-		<img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 212px;height: 102px;" />
+		<img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
 		
-		<text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 			{{nowTime}}
 		</text>
-		<text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		<text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
 			书籍详情
 		</text>
 	</div>
@@ -257,13 +257,13 @@ export default {
 
 <style>
 .page {
-	width: 212px;
-	height: 520px;
+	width: 192px;
+	height: 490px;
 	background-color: #000000;
 }
 .list {
-	width: 212px;
-	height: 520px;
+	width: 192px;
+	height: 490px;
 	position: absolute;
 	top: 0px;
 	left: 0px;

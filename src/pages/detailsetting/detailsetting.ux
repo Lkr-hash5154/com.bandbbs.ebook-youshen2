@@ -65,12 +65,12 @@
 	  </list>
   
 	  
-	  <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 212px;height: 102px;" />
+	  <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
 	  
-	  <text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+	  <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 		{{nowTime}}
 	  </text>
-	  <text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+	  <text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
 		  菜单
 	  </text>
 	</div>
@@ -216,18 +216,18 @@
   
   <style>
   .page {
-	  width: 212px;
-	  height: 520px;
+	  width: 192px;
+	  height: 490px;
 	  background-color: #000000;
   }
   
   .more-info {
-	width: 211px;
+	width: 192px;
 	background-color: rgb(0,0,0);
   }
   
   .caltext {
-	  width: 200px;
+	  width: 192px;
 	  lines: 4;
 	  text-overflow: clip;
 	  font-size: 26px;
@@ -237,18 +237,18 @@
   }
   
   .list {
-	  width: 212px;
-	  height: 520px;
+	  width: 192px;
+	  height: 490px;
 	  position: absolute;
 	  top:0px;
 	  left:0px;
-	padding: 86px 6px;
+	padding: 66px 6px;
   }
   
   .item {
 	  width: 100%;
 	  height: 112px;
-	  padding: 14px 20px;
+	  padding: 10px 20px;
 	  margin-bottom: 8px;
 	  background-color: #262626;
 	  border-radius: 36px;
@@ -257,8 +257,8 @@
   }
   
   .itemtext {
-	  font-size: 28px;
-	  line-height:36px;
+	  font-size: 24px;
+	  line-height:40px;
 	  width: 100%;
 	  font-weight: bold;
 	  color: white;

@@ -33,9 +33,9 @@
             </list-item>
           </list>
           <div style="position: absolute;top:95px;left:8px;width:464px;height:52px;" show="{{downFlag===''&&!numFlag}}">
-            <img src="./assets/full/Q.png" style="width:54px;height:52px;margin-right: 4px;" @click="onSelect('Q')" />
+            <img src="./assets/full/Q.png" style="width:44px;height:52px;margin-right: 4px;" @click="onSelect('Q')" />
             <text class="calbtnfull" for="{{item in keys['full62'][0]}}" @click="onSelect(item)">{{item}}</text>
-            <img src="./assets/full/P.png" style="width:54px;height:52px;" @click="onSelect('P')" />
+            <img src="./assets/full/P.png" style="width:44px;height:52px;" @click="onSelect('P')" />
           </div>
           <div style="position: absolute;top:152px;left:23px;width:438px;height:52px;" show="{{downFlag===''&&!numFlag}}">
             <img src="./assets/full/btA.png" style="width:60px;height:52px;margin-right: 4px;" @click="onSelect('A')" />
@@ -48,9 +48,9 @@
             <img src="./assets/full/M.png" style="width:72px;height:52px;" @click="onSelect('M')" />
           </div>
           <div style="position: absolute;top:95px;left:8px;width:464px;height:52px;" show="{{numFlag}}">
-            <img src="./assets/full/1.png" style="width:54px;height:52px;margin-right: 4px;" @click="onSelect('1')" />
+            <img src="./assets/full/1.png" style="width:44px;height:52px;margin-right: 4px;" @click="onSelect('1')" />
             <text class="calbtnfull" for="{{item in keys['sign62'][0]}}" @click="onSelect(item)">{{item}}</text>
-            <img src="./assets/full/0.png" style="width:54px;height:52px;" @click="onSelect('0')" />
+            <img src="./assets/full/0.png" style="width:44px;height:52px;" @click="onSelect('0')" />
           </div>
           <div style="position: absolute;top:152px;left:23px;width:438px;height:52px;" show="{{numFlag}}">
             <img src="./assets/full/2-1.png" style="width:60px;height:52px;margin-right: 4px;" @click="onSelect('~')" />
@@ -221,7 +221,7 @@
       </div>
       <!-- 胶囊屏66 -->
       <div if="{{screentype==='pill-shaped'}}" style="width: 100%;height: 305px">
-        <div static style="position:absolute;left:0px;top:34px;width:100%;height:276px;">
+        <div static style="position:absolute;left:0px;top:24px;width:100%;height:276px;">
           <progress percent="{{30+percent66}}" type="arc" style="start-angle:204deg;total-angle:-48deg;width:188px;height:188px;top:82px;left:2px;position:absolute;color:#ffffff;stroke-width:6px;layer-color:#262626;margin-left: {{(screenWidth - 192)/2}}px;"></progress>
           <scroll id="keyboard66" scroll-x="{{true}}" onscroll="handelScroll" style="padding-left: {{(screenWidth - 192)/2}}px;padding-right: {{(screenWidth - 192)/2}}px;">
             <div if="{{!numFlag}}" style="left: 3px; flex-direction: column;">

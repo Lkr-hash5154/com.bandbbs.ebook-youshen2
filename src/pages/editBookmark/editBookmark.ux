@@ -1,13 +1,13 @@
 <import name="input-method" src="../../components/InputMethod/InputMethod.ux"></import>
 <template>
     <div class="page">
-        <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 212px;height: 102px;" />
+        <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
         
-        <img static src="/common/images/conform.png" @click="save" style="position: absolute;bottom: 6px;left:70px;width: 72px;height: 72px;"/>
-        <text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+        <img static src="/common/images/conform.png" @click="save" style="position: absolute;bottom: 6px;left:60px;width: 72px;height: 72px;"/>
+        <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
             {{nowTime}}
         </text>
-        <text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+        <text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
             编辑名称
         </text>
 
@@ -117,8 +117,8 @@ export default {
 
 <style>
 .page {
-    width: 212px;
-    height: 520px;
+    width: 192px;
+    height: 490px;
     background-color: #000000;
     flex-direction: column;
 }

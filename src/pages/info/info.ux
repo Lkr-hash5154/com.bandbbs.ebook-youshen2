@@ -1,7 +1,7 @@
 <template>
   <div class="page">
-    <div style="position: absolute;left: 0px;top: 0px;width: 212px;height: 520px;flex-direction: column; align-items: center;">
-      <img src="/common/images/infodetail.png" style="width: 212px; height: auto;"/>
+    <div style="position: absolute;left: 0px;top: 0px;width: 192px;height: 490px;flex-direction: column; align-items: center;">
+      <img src="/common/images/infodetail.png" style="width: 192px; height: auto;"/>
       <img src="/common/images/conform2.png" style="position: absolute; bottom: 20px; width: 102px;height: 72px;" @click="back('')"/>
     </div>
   </div>
@@ -20,8 +20,8 @@ export default {
 
 <style>
 .page {
-	width: 212px;
-	height: 520px;
+	width: 192px;
+	height: 490px;
 	background-color: #000000;
 }
 

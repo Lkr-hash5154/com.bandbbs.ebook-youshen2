@@ -1,15 +1,15 @@
 <import name="number" src="../../components/number_choose/number_choose"></import>
 <template>
 	<div class="page" style="flex-direction: column">
-		<number style="position: absolute;bottom:226px" max="200" min="0" step="5" unit="px" value="{{scrollSensitivity}}" @change="onSensitivityChange" name="触发灵敏度">
+		<number style="position: absolute;bottom:220px" max="200" min="0" step="5" unit="px" value="{{scrollSensitivity}}" @change="onSensitivityChange" name="触发灵敏度">
 		</number>
-		<number style="position: absolute;bottom:46px" max="200" min="25" step="5" unit="px" value="{{buttonHeight}}" @change="onHeightChange" name="按钮高度">
+		<number style="position: absolute;bottom:0px" max="200" min="25" step="5" unit="px" value="{{buttonHeight}}" @change="onHeightChange" name="按钮高度">
 		</number>
 
-		<text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 		  {{nowTime}}
 		</text>
-		<text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		<text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
 			翻章按钮
 		</text>
 	</div>
@@ -98,8 +98,8 @@ export default {
 
 <style>
 .page {
-	width: 212px;
-	height: 520px;
+	width: 192px;
+	height: 490px;
 	background-color: #000000;
 }
 
@@ -107,7 +107,7 @@ export default {
 	position: absolute;
 	left: 6px;
 	top: 86px;
-	width: 200px;
+	width: 192px;
 	height: 80px;
 	border-radius: 36px;
 	flex-direction: column;

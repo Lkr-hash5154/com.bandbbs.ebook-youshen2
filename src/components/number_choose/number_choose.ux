@@ -66,9 +66,9 @@ export default {
 }
 .img {
 	position: absolute;
-	left: 45px;
-	width: 102px;
-	height: 72px;
+	left: 60px;
+	width: 70px;
+	height: 70px;
 }
 text{
     width: 100%;

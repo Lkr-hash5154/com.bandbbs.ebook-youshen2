@@ -9,10 +9,10 @@
       </text>
     </div>
     
-    <text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+    <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
       {{nowTime}}
     </text>
-    <marquee style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+    <marquee style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
       段落防分割
     </marquee>
   </div>
@@ -76,15 +76,15 @@ export default {
 
 <style>
 .page {
-  width: 212px;
-  height: 520px;
+  width: 192px;
+  height: 490px;
   background-color: #000000;
 }
 .item {
   position: absolute;
-  left: 6px;
+  left: 0px;
   top: 86px;
-  width: 200px;
+  width: 192px;
   height: 308px;
   border-radius: 36px;
   flex-direction: column;
