@@ -1,0 +1,168 @@
+{
+  "package": "com.bandbbs.ebook.plus",
+  "name": "电子书",
+  "versionName": "4.3.1.BAND10",
+  "versionCode": 251108,
+  "minPlatformVersion": 1100,
+  "icon": "/common/logo.png",
+  "simulationVersion": "default",
+  "deviceTypeList": [
+    "watch"
+  ],
+  "features": [
+    {
+      "name": "system.router"
+    },
+    {
+      "name": "system.storage"
+    },
+    {
+      "name": "system.prompt"
+    },
+    {
+      "name": "system.file"
+    },
+    {
+      "name": "system.request"
+    },
+    {
+      "name": "system.fetch"
+    },
+    {
+      "name": "system.network"
+    },
+    {
+      "name": "system.interconnect"
+    },
+    {
+      "name": "system.configuration"
+    },
+    {
+      "name": "system.app"
+    },
+    {
+      "name": "system.brightness"
+    },
+    {
+      "name": "system.device"
+    },
+    {
+      "name": "system.vibrator"
+    }
+  ],
+  "config": {
+    "logLevel": "log",
+    "designWidth": 212
+  },
+  "router": {
+    "entry": "pages/index",
+    "pages": {
+      "pages/index": {
+        "component": "index",
+        "launchMode": "singleTask"
+      },
+      "pages/detail": {
+        "component": "detail"
+      },
+      "pages/detailsetting": {
+        "component": "detailsetting"
+      },
+      "pages/readPresent": {
+        "component": "readPresent"
+      },
+      "pages/autoRead": {
+        "component": "autoRead"
+      },
+      "pages/opacity": {
+        "component": "opacity"
+      },
+      "pages/more": {
+        "component": "more"
+      },
+      "pages/about": {
+        "component": "about"
+      },
+      "pages/fontSetting": {
+        "component": "fontSetting"
+      },
+      "pages/marginSetting": {
+        "component": "marginSetting"
+      },
+      "pages/push": {
+        "component": "push"
+      },
+      "pages/info": {
+        "component": "info"
+      },
+      "pages/swipe": {
+        "component": "swipe"
+      },
+      "pages/chapterSwitchSensitivity": {
+        "component": "chapterSwitchSensitivity"
+      },
+      "pages/gestureSetting": {
+        "component": "gestureSetting"
+      },
+      "pages/bookmarks": {
+        "component": "bookmarks"
+      },
+      "pages/pageSizeSetting": {
+        "component": "pageSizeSetting"
+      },
+      "pages/bookinfo": {
+        "component": "bookinfo"
+      },
+      "pages/confirm": {
+        "component": "confirm"
+      },
+      "pages/editBookmark": {
+        "component": "editBookmark"
+      },
+      "pages/help": {
+        "component": "help"
+      },
+      "pages/screenBrightness": {
+        "component": "screenBrightness"
+      },
+      "pages/list": {
+        "component": "list"
+      },
+      "pages/teacherScreen": {
+        "component": "teacherScreen"
+      },
+      "pages/shelfStyle": {
+        "component": "shelfStyle"
+      },
+      "pages/textReader": {
+        "component": "textReader"
+      },
+      "pages/chapterSwitchSetting": {
+        "component": "chapterSwitchSetting"
+      },
+      "pages/chapterSwitchStyle": {
+        "component": "chapterSwitchStyle"
+      },
+      "pages/swipeSensitivity": {
+        "component": "swipeSensitivity"
+      },
+      "pages/tutorial": {
+        "component": "tutorial"
+      },
+      "pages/shelfPageSizeSetting": {
+        "component": "shelfPageSizeSetting"
+      },
+      "pages/autoReadDistanceSetting": {
+        "component": "autoReadDistanceSetting"
+      },
+      "pages/timeFormatSetting": {
+        "component": "timeFormatSetting"
+      },
+      "pages/preventParagraphSplittingSetting": {
+        "component": "preventParagraphSplittingSetting"
+      }
+    }
+  },
+  "display": {
+    "backgroundColor": "#000000"
+  }
+}
