@@ -10,15 +10,15 @@
           <marquee class="itemtext2" scrollamount="50" text-offset="25">{{formatBookmarkLocation($item)}} | {{formatTime($item.time)}}</marquee>
         </div>
         <div class="button-container">
-          <img src="/common/images/edit.png" @click="editBookmark($idx)" style="width: 48px; height: 48px;" />
-          <img src="/common/images/delete.png" @click="deleteBookmark($idx)" style="width: 48px; height: 48px;" />
+          <!--<img src="/common/images/edit.png" onclick="editBookmark($idx)" style="width: 48px; height: 48px;" />-->
+          <img src="/common/images/delete.png" onclick="deleteBookmark($idx)" style="width: 48px; height: 48px;" />
         </div>
       </list-item>
       <list-item type="pagination" class="pagination-container" if="{{totalPages > 1}}">
         <div class="pagination-controls">
-          <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button"/>
+          <img src="/common/images/pre.png" if="{{currentPage > 0}}" onclick="prevPage" class="pagination-button"/>
           <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
-          <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button"/>
+          <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" onclick="nextPage" class="pagination-button"/>
         </div>
       </list-item>
     </list>

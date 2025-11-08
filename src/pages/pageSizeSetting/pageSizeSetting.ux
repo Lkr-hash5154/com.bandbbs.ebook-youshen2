@@ -6,7 +6,7 @@
 				此设置影响翻页时加载的文本量。
 			</text>
 		</div>
-		<number style="position: absolute; bottom: 6px" max="1200" min="200" step="100" unit="字节" value="{{pageSize}}" @change="change" name="分段大小">
+		<number style="position: absolute; bottom: 6px" max="1200" min="200" step="100" unit="字" value="{{pageSize}}" @change="change" name="分段大小">
 		</number>
 
 		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">

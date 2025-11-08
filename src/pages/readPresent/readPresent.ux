@@ -26,11 +26,9 @@
 	  <div class="row" style="top:410px; justify-content: center;">
 		  <img src="/common/images/num_pad/0.png" @click="onClick('0')" style="width: 48px; height: 48px; margin-right: 20px;"/>
 		  <img src="/common/images/num_pad/del.png" @click="onClick('del')" style="width: 48px; height: 48px;"/>
+		  <img static src="/common/images/conform.png" @click="onClick('conform')" style="width: 48px; height: 48px;"/>
 	  </div>
   
-  
-	  
-	  <img static src="/common/images/conform.png" @click="onClick('conform')" style="position: absolute;left: 158px;top: 6px;width: 48px;height: 48px;"/>
 	  <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 		{{nowTime}}
 	  </text>

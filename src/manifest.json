@@ -115,9 +115,6 @@
       "pages/confirm": {
         "component": "confirm"
       },
-      "pages/editBookmark": {
-        "component": "editBookmark"
-      },
       "pages/help": {
         "component": "help"
       },

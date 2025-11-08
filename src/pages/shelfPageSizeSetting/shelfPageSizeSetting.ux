@@ -8,7 +8,7 @@
 		<marquee class="info-desc">调整在书架上每页显示的书籍数量，由于性能原因，该值请不要过大。</marquee>
 	</div>
 	
-	<number style="position: absolute;bottom:6px" max="15" min="2" step="1" value="{{shelfPageSize}}" @change="changeSize" name="调整数量"></number>
+	<number style="position: absolute;bottom:6px" max="15" min="1" step="1" value="{{shelfPageSize}}" @change="changeSize" name="调整数量"></number>
 
 	<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 	  {{nowTime}}
