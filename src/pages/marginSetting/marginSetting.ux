@@ -15,20 +15,18 @@
 		<div class="info-panel">
 			<text class="info-title">垂直边距</text>
 			<text class="info-value">{{verticalMargin}}px</text>
-			<text class="info-desc">上下各留白 {{verticalMargin}}px</text>
+			<marquee class="info-desc">上下各留白 {{verticalMargin}}px</marquee>
 		</div>
 	</div>
 	
 	<number style="position: absolute;bottom:6px" max="50" min="0" step="5" value="{{verticalMargin}}" @change="changeMargin" name="调整边距"></number>
 
-	<img static src="/common/images/back.png" @click="back" style="position: absolute;left: 6px;top: 6px;width: 72px;height: 72px;"/>
-	<img static src="/common/images/reset.png" @click="reset" style="position: absolute;left: 258px;top: 6px;width: 72px;height: 72px;"/>
-	<text style="position: absolute;left: 78px;top: 7px;width: 180px;line-height: 32px;font-weight:bold;font-size:24px;color:rgba(255,255,255,0.6);text-align:center;">
-	  {{nowTime}}
-	</text>
-	<text style="position: absolute;left: 78px;top: 35px;width: 180px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">
-		垂直边距
-	</text>
+	<text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+		{{nowTime}}
+	  </text>
+	  <text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		  垂直边距
+	  </text>
   </div>
 </template>
 
@@ -39,7 +37,7 @@ import app from '@system.app'
 
 export default {
   private: {
-	verticalMargin: 0,
+	verticalMargin: 10,
 	opacity: 100,
 	nowTime: "00:00",
 	timer: null
@@ -87,7 +85,7 @@ export default {
 	  })
   },
   reset() {
-	this.verticalMargin = 0;
+	this.verticalMargin = 10;
 	storage.set({
 		key: "EBOOK_VERTICAL_MARGIN",
 		value: this.verticalMargin.toString(),
@@ -108,8 +106,8 @@ export default {
 
 <style>
 .page {
-	width: 336px;
-	height: 480px;
+	width: 212px;
+	height: 520px;
 	background-color: #000000;
 }
 
@@ -117,17 +115,17 @@ export default {
 	position: absolute;
 	left: 6px;
 	top: 86px;
-	width: 324px;
+	width: 200px;
 	height: 280px;
-	flex-direction: row;
-	justify-content: space-between;
+	flex-direction: column;
+	justify-content: space-around;
 	align-items: center;
 	padding: 10px;
 }
 
 .preview-screen {
 	width: 112px;
-	height: 160px;
+	height: 120px;
 	background-color: #1a1a1a;
 	border-radius: 20px;
 	border: 3px solid #333333;
@@ -159,7 +157,7 @@ export default {
 }
 
 .preview-text {
-	font-size: 20px;
+	font-size: 18px;
 	font-weight: bold;
 	color: white;
 	text-align: center;
@@ -172,29 +170,30 @@ export default {
 	align-items: center;
 	justify-content: center;
 	flex: 1;
-	margin-left: 10px;
+	margin-left: 0px;
+	margin-top: 10px;
 }
 
 .info-title {
-	font-size: 28px;
+	font-size: 24px;
 	font-weight: bold;
 	color: white;
-	line-height: 38px;
+	line-height: 32px;
 	margin-bottom: 6px;
 }
 
 .info-value {
-	font-size: 48px;
+	font-size: 40px;
 	font-weight: bold;
 	color: #0D6EFF;
-	line-height: 56px;
+	line-height: 48px;
 	margin-bottom: 10px;
 }
 
 .info-desc {
-	font-size: 22px;
+	font-size: 18px;
 	color: rgba(255,255,255,0.6);
-	line-height: 30px;
+	line-height: 26px;
 	text-align: center;
 }
 </style>

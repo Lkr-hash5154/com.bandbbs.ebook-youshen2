@@ -1,25 +1,49 @@
 <template>
 	<div class="page" style="flex-direction: column;">
 
-	  <img if="{{fileList.length == 0}}" src="/common/images/empty.png"
-		  style="position: absolute;left: 32px;top: 146px;width: 128px;height: 128px;" />
+	  <img if="{{allBooks.length == 0}}" src="/common/images/empty.png"
+		  style="position: absolute;left: 42px;top: 146px;width: 128px;height: 128px;" />
 
-	  <text if="{{fileList.length == 0}}" style="position: absolute;left: 0px;top: 288px;width: 192px;line-height: 42px;font-weight:bold;font-size:32px;color:white;text-align:center;">书架空空</text>
+	  <text if="{{allBooks.length == 0}}" style="position: absolute;left: 0px;top: 298px;width: 212px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">书架空空</text>
 
-	  <list class="list">
-		  <list-item for="{{fileList}}" class="item" @click="selectFile($item)" type="nook">
-			   <div class="cover-content">
-                  <marquee scrollamount="22" class="itemtext">{{$item.name}}</marquee>
-                  <text class="itemtext2">{{$item.chapterCount}}章 · 进度 {{$item.progress || 0}}%</text>
-              </div>
+      <list class="list" if="{{shelfStyle === 'list'}}">
+		  <list-item for="{{visibleBooks}}" class="item" @click="selectFile($item)" type="nook">
+			  <marquee scrollamount="22" class="itemtext" text-offset="25">{{$item.name}}</marquee>
+			  <marquee scrollamount="40" class="itemtext2" text-offset="25">{{$item.chapterCount}}章 · 进度 {{$item.progress || 0}}%</marquee>
 		  </list-item>
+          <list-item type="pagination" class="pagination-container" if="{{totalPages > 1}}">
+            <div class="pagination-controls">
+              <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button"/>
+              <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
+              <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button"/>
+            </div>
+          </list-item>
 	  </list>
 
-    <img static src="/common/images/mask_up.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 118px;" />
-    <img static src="/common/images/more.png" @click="routerTo('more')" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
+      <list class="list" if="{{shelfStyle === 'cover'}}">
+          <list-item for="{{visibleBooks}}" class="item cover-item" @click="selectFile($item)" type="nook">
+            <img if="{{$item.hasRealCover}}" class="cover-image" src="internal://files/books/{{$item.dirName}}/cover.jpg" />
+            <div class="cover-content">
+              <marquee scrollamount="30" class="itemtext" text-offset="25">{{$item.name}}</marquee>
+              <marquee scrollamount="40" class="itemtext2" text-offset="25">{{$item.chapterCount}}章 · 进度 {{$item.progress || 0}}%</marquee>
+            </div>
+          </list-item>
+          <list-item type="pagination" class="pagination-container" if="{{totalPages > 1}}">
+            <div class="pagination-controls">
+              <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button"/>
+              <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
+              <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button"/>
+            </div>
+          </list-item>
+      </list>
 
-    <img if="{{fileList.length == 0}}" src="/common/images/push.png" 
-      style="position: absolute;left: 45px;top: 412px;width: 102px;height: 72px;" @click="routerTo('push')"/>
+    <img static src="/common/images/more.png" @click="routerTo('more')" style="position: absolute;bottom: 6px;left:70px;width: 72px;height: 72px;"/>
+    <text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+      {{nowTime}}
+    </text>
+    <text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+      电子书
+    </text>
 	</div>
 </template>
 
@@ -34,10 +58,16 @@ const INIT_PATH = "internal://files/books";
 
 export default {
   private: {
-    fileList: [],
     debugOutput: "初始化中...",
     nowTime: "00:00",
-    timer: null
+    timer: null,
+    shelfStyle: 'list',
+    isNavigating: false,
+    allBooks: [],
+    visibleBooks: [],
+    currentPage: 0,
+    totalPages: 1,
+    pageSize: 6
   },
   exit(){
 	  app.terminate();
@@ -62,6 +92,31 @@ export default {
 	  clearInterval(this.timer);
   },
   onShow() {
+    this.isNavigating = false;
+    this.loadSettingsAndFiles();
+  },
+  getStorage(key, defaultValue) {
+    return new Promise((resolve) => {
+      storage.get({
+        key: key,
+        success: (data) => {
+          resolve(data || defaultValue);
+        },
+        fail: () => {
+          resolve(defaultValue);
+        }
+      });
+    });
+  },
+  async loadSettingsAndFiles() {
+    const [pageSize, shelfStyle] = await Promise.all([
+      this.getStorage('EBOOK_SHELF_PAGE_SIZE', 6),
+      this.getStorage('EBOOK_SHELF_STYLE', 'list')
+    ]);
+
+    this.pageSize = parseInt(pageSize);
+    this.shelfStyle = shelfStyle;
+
     this.loadFileList();
   },
   loadFileList() {
@@ -71,18 +126,72 @@ export default {
         uri: bookshelfUri,
         success: function(data) {
             try {
-                that.fileList = JSON.parse(data.text);
+                let books = JSON.parse(data.text);
+                if (that.shelfStyle === 'cover') {
+                    books.forEach(book => {
+                        book.hasRealCover = false;
+                    });
+                }
+                that.allBooks = books;
+                that.loadPage(0);
             } catch (e) {
-                that.fileList = [];
+                that.allBooks = [];
+                that.visibleBooks = [];
             }
         },
         fail: function() {
-            that.fileList = [];
+            that.allBooks = [];
+            that.visibleBooks = [];
         }
     });
   },
 
+  loadPage(page) {
+    this.totalPages = Math.ceil(this.allBooks.length / this.pageSize);
+    if (this.totalPages === 0) this.totalPages = 1;
+    
+    if (page >= 0 && page < this.totalPages) {
+      const start = page * this.pageSize;
+      const end = start + this.pageSize;
+      this.visibleBooks = this.allBooks.slice(start, end);
+      this.currentPage = page;
+      if (this.shelfStyle === 'cover') {
+        this.checkCovers();
+      }
+    }
+  },
+
+  checkCovers() {
+    this.visibleBooks.forEach((book, index) => {
+      const coverPath = `internal://files/books/${book.dirName}/cover.jpg`;
+      file.access({
+        uri: coverPath,
+        success: () => {
+          const newBook = Object.assign({}, book, { hasRealCover: true });
+          this.visibleBooks.splice(index, 1, newBook);
+        }
+      });
+    });
+  },
+
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.loadPage(this.currentPage - 1);
+    }
+  },
+
+  nextPage() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.loadPage(this.currentPage + 1);
+    }
+  },
+
   selectFile(item) {
+    if (this.isNavigating) {
+        return;
+    }
+    this.isNavigating = true;
+
     router.push({
         uri: '/pages/detail',
         params: {
@@ -102,14 +211,14 @@ export default {
 
 <style>
 .page {
-	width: 192px;
-	height: 490px;
+	width: 212px;
+	height: 520px;
 	background-color: #000000;
 }
 
 .list {
-	width: 192px;
-	height: 490px;
+	width: 212px;
+	height: 520px;
 	position: absolute;
 	top:0px;
 	left:0px;
@@ -128,9 +237,30 @@ export default {
   align-items: flex-start;
 }
 
+.cover-item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.cover-image {
+    width: 48px;
+    height: 64px;
+    background-color: #333;
+    margin-right: 12px;
+}
+
+.cover-content {
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex: 1;
+    height: 100%;
+}
+
 .itemtext {
-	font-size: 32px;
-	line-height:40px;
+	font-size: 28px;
+	line-height:36px;
 	width: 100%;
 	font-weight: bold;
 	color: white;
@@ -139,12 +269,35 @@ export default {
 }
 
 .itemtext2 {
-	font-size: 24px;
-	line-height: 32px;
+	font-size: 20px;
+	line-height: 28px;
 	font-weight: bold;
 	color: rgba(255,255,255,0.6);
 	text-overflow: ellipsis;
 	lines: 1;
+}
+
+.pagination-container {
+    width: 100%;
+    height: 80px;
+    justify-content: center;
+    align-items: center;
+}
+.pagination-controls {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+}
+.pagination-button {
+    width: 48px;
+    height: 48px;
+}
+.pagination-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
 }
 
 </style>

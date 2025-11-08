@@ -2,16 +2,24 @@
 <template>
 	<div class="page" style="flex-direction: column;">
 		<div class="item">
-			<text style="font-size: 24px;font-weight:bold;color: rgba(255, 255, 255, 0.6);text-align: center;margin-bottom:40px;top: 20px;">跟随系统亮度</text>
-			<img static src="/common/images/Switch_ON.png" style="width: 102px;height: 72px;" @click="toggleFollowSystem" if="{{followSystem}}"/>
-			<img static src="/common/images/Switch_OFF.png" style="width: 102px;height: 72px;" @click="toggleFollowSystem" else/>
+			<text style="font-size: 20px;font-weight:bold;color: rgba(255, 255, 255, 0.6);text-align: center;margin-bottom:40px;top: 30px;">跟随系统亮度</text>
+			<img static src="/common/images/Switch_ON.png" style="width: 113px;height: 80px;" @click="toggleFollowSystem" if="{{followSystem}}"/>
+			<img static src="/common/images/Switch_OFF.png" style="width: 113px;height: 80px;" @click="toggleFollowSystem" else/>
+			<text style="font-size: 30px;font-weight:bold;color: white;width: 100%;text-align: center;">
+				{{followSystem ? 'ON' : 'OFF'}}
+			</text>
 		</div>
 
 		<number show="{{!followSystem}}" style="position: absolute; bottom: 6px" max="255" min="10" step="1" unit="" value="{{brightnessValue}}" @change="change" name="自定义亮度">
 		</number>
 
-		<img static src="/common/images/back.png" @click="back" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
-
+		
+		<text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+		  {{nowTime}}
+		</text>
+		<text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+			屏幕亮度
+		</text>
 	</div>
 </template>
 
@@ -70,13 +78,13 @@ export default {
     toggleFollowSystem() {
         this.followSystem = !this.followSystem;
         if (this.followSystem) {
-            brightness.setMode({ mode: brightness.AUTO_MODE });
+            brightness.setMode({ mode: 1 });
             storage.set({
                 key: FOLLOW_SYSTEM_KEY,
                 value: 'true'
             });
         } else {
-            brightness.setMode({ mode: brightness.MANUAL_MODE });
+            brightness.setMode({ mode: 0 });
             brightness.setValue({ value: this.brightnessValue });
             storage.set({
                 key: FOLLOW_SYSTEM_KEY,
@@ -86,7 +94,7 @@ export default {
     },
 	change(e) {
 		this.brightnessValue = e.detail.value;
-        brightness.setMode({ mode: brightness.MANUAL_MODE });
+        brightness.setMode({ mode: 0 });
         brightness.setValue({ value: this.brightnessValue });
 		storage.set({
 			key: BRIGHTNESS_KEY,
@@ -101,17 +109,17 @@ export default {
 
 <style>
 .page {
-	width: 192px;
-	height: 490px;
+	width: 212px;
+	height: 520px;
 	background-color: #000000;
 }
 
 .item {
 	position: absolute;
-	left: 0px;
-	top: 75px;
-	width: 192px;
-	height: 190px;
+	left: 6px;
+	top: 86px;
+	width: 200px;
+	height: 248px;
 	border-radius: 36px;
 	flex-direction: column;
 	border: 3px solid #262626;

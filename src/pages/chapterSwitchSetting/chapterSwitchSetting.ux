@@ -1,23 +1,16 @@
 <import name="number" src="../../components/number_choose/number_choose"></import>
 <template>
 	<div class="page" style="flex-direction: column">
-		<div class="item">
-			<text style="font-size: 20px; color: white; text-align: left; padding: 20px; lines: 5;">
-				此设置影响翻页时加载的文本量。
-				值越大，每页加载的文本越多，但也可能增加单次加载时间。
-				修改后需重进阅读页生效。
-			</text>
-		</div>
-		<number style="position: absolute; bottom: 6px" max="1200" min="200" step="100" unit="字节" value="{{pageSize}}" @change="change" name="分段大小">
+		<number style="position: absolute;bottom:226px" max="200" min="0" step="5" unit="px" value="{{scrollSensitivity}}" @change="onSensitivityChange" name="触发灵敏度">
+		</number>
+		<number style="position: absolute;bottom:46px" max="200" min="25" step="5" unit="px" value="{{buttonHeight}}" @change="onHeightChange" name="按钮高度">
 		</number>
 
-		
-		<img static src="/common/images/reset.png" @click="reset" style="position: absolute;left: 158px;top: 6px;width: 48px;height: 48px;"/>
 		<text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 		  {{nowTime}}
 		</text>
 		<text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
-			分段大小
+			翻章按钮
 		</text>
 	</div>
 </template>
@@ -26,12 +19,15 @@
 import router from "@system.router";
 import storage from '../../common/storage.js';
 
-const STORAGE_KEY = "EBOOK_TXTSZPAGE";
-const DEFAULT_SIZE = 400;
+const HEIGHT_STORAGE_KEY = "EBOOK_CHAPTER_SWITCH_HEIGHT";
+const SENSITIVITY_STORAGE_KEY = "EBOOK_CHAPTER_SWITCH_SENSITIVITY";
+const DEFAULT_HEIGHT = 80;
+const DEFAULT_SENSITIVITY = 50;
 
 export default {
 	private: {
-		pageSize: DEFAULT_SIZE,
+		buttonHeight: DEFAULT_HEIGHT,
+		scrollSensitivity: DEFAULT_SENSITIVITY,
 		nowTime: "00:00",
 		timer: null
 	},
@@ -39,11 +35,8 @@ export default {
 		const date = new Date();
 		let hours = date.getHours();
 		let minutes = date.getMinutes();
-
-		// 格式化小时和分钟为两位数
 		hours = hours < 10 ? '0' + hours : hours;
 		minutes = minutes < 10 ? '0' + minutes : minutes;
-
 		this.nowTime = `${hours}:${minutes}`;
 	},
 	onInit() {
@@ -52,36 +45,52 @@ export default {
 			this.updateTime();
 		}, 1000);
 		storage.get({
-			key: STORAGE_KEY,
+			key: HEIGHT_STORAGE_KEY,
 			success: (data) => {
 				if (data) {
-					this.pageSize = parseInt(data);
+					this.buttonHeight = parseInt(data);
 				}
 			},
-		})
+		});
+		storage.get({
+			key: SENSITIVITY_STORAGE_KEY,
+			success: (data) => {
+				if (data) {
+					this.scrollSensitivity = parseInt(data);
+				}
+			},
+		});
 	},
 	onDestroy(){
 	  clearInterval(this.timer);
 	},
-	change(e) {
-		this.pageSize = e.detail.value;
+	onHeightChange(e) {
+		this.buttonHeight = e.detail.value;
 		storage.set({
-			key: STORAGE_KEY,
-			value: this.pageSize.toString(),
+			key: HEIGHT_STORAGE_KEY,
+			value: this.buttonHeight.toString(),
+		});
+	},
+	onSensitivityChange(e) {
+		this.scrollSensitivity = e.detail.value;
+		storage.set({
+			key: SENSITIVITY_STORAGE_KEY,
+			value: this.scrollSensitivity.toString(),
 		});
 	},
 	reset() {
-		this.pageSize = DEFAULT_SIZE;
+		this.buttonHeight = DEFAULT_HEIGHT;
+		this.scrollSensitivity = DEFAULT_SENSITIVITY;
 		storage.set({
-			key: STORAGE_KEY,
-			value: this.pageSize.toString(),
+			key: HEIGHT_STORAGE_KEY,
+			value: this.buttonHeight.toString(),
+		});
+		storage.set({
+			key: SENSITIVITY_STORAGE_KEY,
+			value: this.scrollSensitivity.toString(),
 		});
 	},
 	back() {
-		storage.set({
-			key: STORAGE_KEY,
-			value: this.pageSize.toString(),
-		});
 		router.back();
 	},
 };
@@ -99,13 +108,19 @@ export default {
 	left: 6px;
 	top: 86px;
 	width: 200px;
-	height: 228px;
+	height: 80px;
 	border-radius: 36px;
 	flex-direction: column;
 	border: 3px solid #262626;
 	align-items: center;
 	justify-content: center;
-	padding: 4px;
+	padding: 20px;
+}
+.description {
+	font-size: 20px;
+	color: white;
+	text-align: left;
+	padding: 10px;
+	width: 100%;
 }
 </style>
-

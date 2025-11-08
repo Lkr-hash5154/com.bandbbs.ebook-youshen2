@@ -1,108 +1,78 @@
 <template>
 	<div class="page" style="flex-direction: column;">
 	  <list class="list">
+		  <list-item class="item" @click="addBookmark" type="item">
+			  <div class="item-content">
+				  <text class="itemtext">添加书签</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25">为当前阅读位置添加书签</marquee>
+			  </div>
+		  </list-item>
 		  <list-item class="item" @click="routerTo('list')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">章节列表</text>
-				  <marquee class="itemtext2">查看或跳转章节</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('bookmarks')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">书签管理</text>
-				  <marquee class="itemtext2">查看或跳转书签</marquee>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25">查看或跳转章节</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item type="item" class="item" @click="routerTo('readPresent')">
 			  <div class="item-content">
 				  <text class="itemtext">跳转章节</text>
-				  <marquee class="itemtext2">按章节号跳转</marquee>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25">按章节号跳转</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
+		  <list-item class="item" @click="routerTo('bookmarks')" type="item">
+			  <div class="item-content">
+				  <text class="itemtext">书签管理</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25">查看或跳转书签</marquee>
+			  </div>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+		  </list-item>
+		  <list-item class="item" @click="toggleKeepScreenOnClick" type="item">
+			<div class="item-content">
+				<marquee class="itemtext" scrollamount="30" text-offset="25">屏幕常亮</marquee>
+				<marquee class="itemtext2" scrollamount="20" text-offset="25">阅读器保持常亮</marquee>
+			</div>
+			<img src="{{isKeepScreenOn ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 40px;"/>
+		</list-item>
 		  <list-item type="item" class="item" @click="backToFirst">
 			  <div class="item-content">
-			  	<text class="itemtext">回到第一段</text>
-			  	<marquee class="itemtext2">跳转到本章开头</marquee>
+				  <text class="itemtext">回到第一段</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25">跳转到本章开头</marquee>
 			  </div>
 		  </list-item>
-		  <list-item class="item" @click="routerTo('screenBrightness')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">屏幕亮度</text>
-				  <marquee class="itemtext2">应用内屏幕亮度</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('opacity')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">字体亮度</text>
-				  <marquee class="itemtext2">设置阅读字体亮度</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('fontSetting')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">字号</text>
-				  <marquee class="itemtext2">设置阅读字体大小</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <!--<list-item class="item" @click="routerTo('marginSetting')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">垂直边距</text>
-				  <text class="itemtext2">调整屏幕留白</text>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>-->
-		  <list-item class="item" @click="routerTo('swipe')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">滑动翻页</text>
-				  <marquee class="itemtext2">管理滑动翻页选项</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('autoRead')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">自动翻页</text>
-				  <marquee class="itemtext2">设置自动翻页选项</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('teacherScreen')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">老师屏</text>
-				  <marquee class="itemtext2">快速退出应用</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="toggleProgressBar" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">章节进度条</text>
-				  <marquee class="itemtext2">显示阅读进度条</marquee>
-			  </div>
-			  <img src="{{showProgressBar ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 40px;"/>
-		  </list-item>
+		  <list-item class="item" @click="routerTo('more')" type="item">
+			<div class="item-content">
+				<text class="itemtext">全局设置</text>
+				<marquee class="itemtext2" scrollamount="20" text-offset="25">打开全局设置</marquee>
+			</div>
+			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+		</list-item>
 		  <list-item class="item" @click="del" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">删除书籍</text>
-				  <marquee class="itemtext2">删除当前书籍</marquee>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25">删除当前书籍</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('bookinfo')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">书籍详情</text>
-				  <marquee class="itemtext2">文件大小, 推送时间等</marquee>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25">封面、占用空间等</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 	  </list>
   
 	  
-	  <img static src="/common/images/mask_up.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 118px;" />
-	  <img static src="/common/images/back.png" @click="back" style="position: absolute;left: 45px;top: 6px;width: 102px;height: 72px;"/>
+	  <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 212px;height: 102px;" />
+	  
+	  <text style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+		{{nowTime}}
+	  </text>
+	  <text style="position: absolute;left: 34px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		  菜单
+	  </text>
 	</div>
   </template>
   
@@ -112,13 +82,15 @@
   import app from '@system.app'
   import file from '@system.file'
   import storage from '../../common/storage.js'
+  import bookStorage from '../../common/bookStorage.js'
+  import chapterManager from '../../common/chapterManager.js'
   
   
   export default {
 	private: {
+		isKeepScreenOn: false,
 		nowTime: "00:00",
-		timer: null,
-		showProgressBar: true
+		timer: null
 	},
 	protected: {
 		name: ''
@@ -138,12 +110,43 @@
 	  this.timer = setInterval(() => {
 		this.updateTime();
 	  }, 1000);
-	  this.loadSettings();
 	},
-	loadSettings() {
-		storage.get({ key: 'EBOOK_SHOW_PROGRESS_BAR', success: (data) => { 
-			if (data !== '') this.showProgressBar = data === 'true'; 
-		}});
+	async addBookmark() {
+		try {
+			const progress = await bookStorage.get(this.name);
+			if (!progress.bookmarks) {
+				progress.bookmarks = [];
+			}
+
+			const chapter = await chapterManager.getChapterByIndex(this.name, progress.chapterIndex);
+			if (!chapter) {
+				prompt.showToast({ message: '无法添加书签，章节信息错误' });
+				return;
+			}
+	
+			const newBookmark = {
+				chapterIndex: progress.chapterIndex,
+				chapterName: chapter.name,
+				offsetInChapter: progress.offsetInChapter,
+				scrollOffset: progress.scrollOffset,
+				time: new Date().getTime(),
+				name: `书签${progress.bookmarks.length + 1}`
+			};
+	
+			const exists = progress.bookmarks.some(bm => bm.chapterIndex === newBookmark.chapterIndex && bm.offsetInChapter === newBookmark.offsetInChapter);
+			if (exists) {
+				prompt.showToast({ message: '书签已存在' });
+				return;
+			}
+	
+			progress.bookmarks.push(newBookmark);
+			progress.bookmarks.sort((a, b) => a.chapterIndex - b.chapterIndex || a.offsetInChapter - b.offsetInChapter);
+			
+			await bookStorage.set(this.name, progress);
+			prompt.showToast({ message: '添加书签成功' });
+		} catch (e) {
+			prompt.showToast({ message: `添加书签失败: ${e}` });
+		}
 	},
 	onDestroy(){
 		clearInterval(this.timer);
@@ -154,6 +157,9 @@
   
 	},
 	onShow(){
+		if (typeof globalThis.isKeepScreenOn !== 'undefined') {
+			this.isKeepScreenOn = globalThis.isKeepScreenOn;
+		}
 	},
 	onBackPress(){
 	},
@@ -181,7 +187,11 @@
 		params: { name: this.name }
 	  })
 	},
-		async backToFirst(){
+	toggleKeepScreenOnClick() {
+		this.isKeepScreenOn = !this.isKeepScreenOn;
+		globalThis.isKeepScreenOn = this.isKeepScreenOn;
+	},
+	async backToFirst(){
 		try {
 			const progress = await bookStorage.get(this.name);
 			progress.offsetInChapter = 0;
@@ -200,54 +210,44 @@
 	},
 	exit(){
 		app.terminate();
-	},
-	toggleProgressBar() {
-		this.showProgressBar = !this.showProgressBar;
-		storage.set({
-			key: 'EBOOK_SHOW_PROGRESS_BAR',
-			value: this.showProgressBar.toString(),
-			success: () => {
-				prompt.showToast({ message: this.showProgressBar ? '已开启章节进度条' : '已关闭章节进度条' });
-			}
-		});
 	}
   }
   </script>
   
   <style>
-.page {
-	  width: 192px;
-	  height: 490px;
+  .page {
+	  width: 212px;
+	  height: 520px;
 	  background-color: #000000;
   }
   
   .more-info {
-	width: 191px;
+	width: 211px;
 	background-color: rgb(0,0,0);
   }
   
   .caltext {
-	  width: 176px;
+	  width: 200px;
 	  lines: 4;
 	  text-overflow: clip;
-	  font-size: 30px;
+	  font-size: 26px;
 	  color: rgb(255,255,255);
 	  text-align: left;
-	  height: 160px;
+	  height: 140px;
   }
   
   .list {
-	  width: 192px;
-	  height: 490px;
+	  width: 212px;
+	  height: 520px;
 	  position: absolute;
 	  top:0px;
 	  left:0px;
-	padding: 66px 0px;
+	padding: 86px 6px;
   }
   
   .item {
 	  width: 100%;
-	  height: 109px;
+	  height: 112px;
 	  padding: 14px 20px;
 	  margin-bottom: 8px;
 	  background-color: #262626;
@@ -257,8 +257,8 @@
   }
   
   .itemtext {
-	  font-size: 24px;
-	  line-height:55px;
+	  font-size: 28px;
+	  line-height:36px;
 	  width: 100%;
 	  font-weight: bold;
 	  color: white;
@@ -267,8 +267,8 @@
   }
   
   .itemtext2 {
-	  font-size: 20px;
-	  line-height: 37px;
+	  font-size: 24px;
+	  line-height: 32px;
 	  font-weight: bold;
 	  color: rgba(255,255,255,0.6);
 	  text-overflow: ellipsis;
