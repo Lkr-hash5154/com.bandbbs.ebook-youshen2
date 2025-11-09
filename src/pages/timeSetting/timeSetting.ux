@@ -76,13 +76,14 @@ export default {
     this.alwaysShowTime = !this.alwaysShowTime;
     this.save()
   },
-    routerTo(url) {
+  routerTo(url) {
 	  router.push({
 		uri: '/pages/' + url
-	})
-
+	  })
+  }
 }
 </script>
+
 
 <style>
 .page {
