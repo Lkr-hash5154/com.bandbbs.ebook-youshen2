@@ -59,6 +59,13 @@
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
 		  </list-item>
 		</list>
+		<img src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
+		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+			{{nowTime}}
+		  </text>
+		  <text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+			更多
+		  </text>
 	</div>
 	</template>	
   

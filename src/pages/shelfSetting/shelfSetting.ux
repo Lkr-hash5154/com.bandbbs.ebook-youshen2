@@ -10,7 +10,7 @@
             </list-item>
             <list-item class="item" @click="routerTo('shelfPageSizeSetting')" type="item">
                 <div class="item-content">
-                    <text class="itemtext" static>书架每页数量</text>
+                    <marquee scrollamount="20" text-offset="25" class="itemtext" static>书架每页数量</marquee>
                     <marquee class="itemtext2" scrollamount="20" text-offset="25" static>调整书架分页数量</marquee>
                 </div>
                 <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />

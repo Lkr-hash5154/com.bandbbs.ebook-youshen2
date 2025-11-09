@@ -109,7 +109,7 @@
   .preview-container {
 	  position: absolute;
 	  left: 0px;
-	  top: 86px;
+	  top: 60px;
 	  width: 192px;
 	  height: 300px;
 	  flex-direction: row;

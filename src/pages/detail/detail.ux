@@ -30,7 +30,7 @@
 		</div>
 	  </scroll>
 	  <img show="{{showSetting || (alwaysShowTime && !isNearTopForHd)}}" src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 132px;" />
-	  <img show="{{showSetting || alwaysShowTime}}" src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 212px;height: 132px;" />
+	  <img show="{{showSetting || alwaysShowTime}}" src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 132px;" />
 	  <text show="{{showSetting || alwaysShowTime}}" style="position: absolute;left: 54px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 			{{nowTime}}
 		</text>

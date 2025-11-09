@@ -14,15 +14,15 @@
 				  <text class="itemtext" static>屏幕亮度</text>
 				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>应用内屏幕亮度</marquee>
 			  </div>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
+		  </list-item>
 		  <list-item class="item" @click="routerTo('timeSetting')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext" static>时间常驻</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>始终显示时间</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
-		  </list-item>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
-		  </list-item>
+			<div class="item-content">
+				<text class="itemtext" static>时间常驻</text>
+				<marquee class="itemtext2" scrollamount="20" text-offset="25" static>始终显示时间</marquee>
+			</div>
+			<img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
+		</list-item>
 		  <list-item class="item" @click="routerTo('fontSetting')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext" static>字号</text>
@@ -53,14 +53,14 @@
 	  	</list-item>
 		  <list-item class="item" @click="routerTo('chapterSwitchSensitivity')" type="item" if="{{chapterSwitchStyle == 'boundary'}}">
 			<div class="item-content">
-				<text class="itemtext" static>换章灵敏度</text>
+				<marquee scrollamount="20" text-offset="25" static class="itemtext" >换章灵敏度</marquee>
 				<marquee class="itemtext2" scrollamount="20" text-offset="25" static>越界换章灵敏度</marquee>
 			</div>
 			<img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
 		</list-item>
 		<list-item class="item" @click="routerTo('swipeSensitivity')" type="item" if="{{chapterSwitchStyle == 'swipe'}}">
 			<div class="item-content">
-				<text class="itemtext" static>换章灵敏度</text>
+				<marquee scrollamount="20" text-offset="25" static class="itemtext" >换章灵敏度</marquee>
 				<marquee class="itemtext2" scrollamount="20" text-offset="25" static>左右滑动灵敏度</marquee>
 			</div>
 			<img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
