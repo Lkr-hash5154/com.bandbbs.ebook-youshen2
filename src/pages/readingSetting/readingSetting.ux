@@ -14,6 +14,13 @@
 				  <text class="itemtext" static>屏幕亮度</text>
 				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>应用内屏幕亮度</marquee>
 			  </div>
+		  <list-item class="item" @click="routerTo('timeSetting')" type="item">
+			  <div class="item-content">
+				  <text class="itemtext" static>时间常驻</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>始终显示时间</marquee>
+			  </div>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
+		  </list-item>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
 		  </list-item>
 		  <list-item class="item" @click="routerTo('fontSetting')" type="item">

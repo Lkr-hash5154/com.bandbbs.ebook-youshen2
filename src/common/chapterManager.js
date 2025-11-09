@@ -1,36 +1,99 @@
 import file from '@system.file';
+import router from '@system.router';
 
-/**
- * 解析章节列表
- * @param {string} bookName - 书籍目录名
- * @returns {Promise<Array>} 章节数组
- */
-async function loadChapterList(bookName) {
-    const listUri = `internal://files/books/${bookName}/list.txt`;
-    
+const bookIndexCache = new Map();
+const chapterChunkCache = new Map();
+const CACHE_EXPIRY = 5 * 60 * 1000;
+const CHAPTERS_PER_FILE = 100;
+
+async function checkVersion(bookName) {
+    const oldListUri = `internal://files/books/${bookName}/list.txt`;
+    const newListUri = `internal://files/books/${bookName}/lindex.txt`;
     try {
-        const data = await new Promise((resolve, reject) => {
-            file.readText({
-                uri: listUri,
-                success: resolve,
-                fail: reject
-            });
-        });
-        
-        const chapters = parseChapterList(data.text);
-        
-        return chapters;
-    } catch (error) {
-        // console.error(`Failed to load chapter list for ${bookName}:`, error);
-        throw error;
+        await runAsyncFunc(file.access, { uri: newListUri });
+        return 'new';
+    } catch (e) {
+        try {
+            await runAsyncFunc(file.access, { uri: oldListUri });
+            return 'old';
+        } catch (err) {
+            return 'none';
+        }
     }
 }
 
-/**
- * 章节列表解析
- * @param {string} text - list.txt的文本内容
- * @returns {Array} 章节数组
- */
+async function handleOldVersion(bookName) {
+    router.push({
+        uri: '/pages/confirm',
+        params: {
+            title: "不兼容的旧格式",
+            subText: "需要删除数据",
+            confirmText: `书籍 "${bookName}" 使用了旧的索引格式，必须删除后重新同步才能阅读。`,
+        }
+    });
+}
+
+function runAsyncFunc(fn, options) {
+    return new Promise((resolve, reject) => {
+        fn({
+            ...options,
+            success: resolve,
+            fail: reject,
+        });
+    });
+}
+
+async function loadBookIndex(bookName) {
+    const cached = bookIndexCache.get(bookName);
+    if (cached && (Date.now() - cached.timestamp < CACHE_EXPIRY)) {
+        return cached.index;
+    }
+
+    const indexUri = `internal://files/books/${bookName}/lindex.txt`;
+    try {
+        const data = await runAsyncFunc(file.readText, { uri: indexUri });
+        const lines = data.text.split('\n');
+        const totalChapters = parseInt(lines[0], 10) || 0;
+        const syncedChapters = parseInt(lines[1], 10) || 0;
+        const ranges = lines.slice(2).filter(Boolean).map(line => {
+            const [start, end] = line.split(',').map(Number);
+            return { start, end };
+        });
+
+        const bookIndex = { totalChapters, syncedChapters, ranges };
+        bookIndexCache.set(bookName, {
+            index: bookIndex,
+            timestamp: Date.now()
+        });
+        return bookIndex;
+    } catch (error) {
+        throw new Error(`Failed to load book index for ${bookName}: ${error.message}`);
+    }
+}
+
+async function loadChapterChunk(bookName, chunkIndex) {
+    const cacheKey = `${bookName}_${chunkIndex}`;
+    const cached = chapterChunkCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp < CACHE_EXPIRY)) {
+        return cached.chapters;
+    }
+
+    const chunkUri = `internal://files/books/${bookName}/indexes/${chunkIndex}.txt`;
+    try {
+        const data = await runAsyncFunc(file.readText, { uri: chunkUri });
+        const chapters = parseChapterList(data.text);
+        chapterChunkCache.set(cacheKey, {
+            chapters,
+            timestamp: Date.now()
+        });
+        return chapters;
+    } catch (error) {
+        // console.error(`Failed to load chapter chunk ${chunkIndex} for ${bookName}:`, error);
+        return [];
+    }
+}
+
+
 function parseChapterList(text) {
     if (!text) return [];
     
@@ -47,7 +110,6 @@ function parseChapterList(text) {
                 chapterMap.set(chapter.index, chapter);
             }
         } catch (e) {
-            // 忽略解析失败的行
             continue;
         }
     }
@@ -58,107 +120,122 @@ function parseChapterList(text) {
     return chapters;
 }
 
-/**
- * 批量获取章节（用于分页）
- * @param {string} bookName - 书籍目录名
- * @param {number} page - 页码（从0开始）
- * @param {number} pageSize - 每页数量
- * @returns {Promise<Object>} {chapters, totalPages, currentPage}
- */
+
+function clearCache(bookName) {
+    if (bookName) {
+        bookIndexCache.delete(bookName);
+        for (const key of chapterChunkCache.keys()) {
+            if (key.startsWith(bookName + '_')) {
+                chapterChunkCache.delete(key);
+            }
+        }
+    } else {
+        bookIndexCache.clear();
+        chapterChunkCache.clear();
+    }
+}
+
 async function getChapterPage(bookName, page = 0, pageSize = 8) {
-    const allChapters = await loadChapterList(bookName);
-    const totalPages = Math.ceil(allChapters.length / pageSize) || 1;
+    const version = await checkVersion(bookName);
+    if (version === 'old') {
+        await handleOldVersion(bookName);
+        return { chapters: [], totalPages: 0, currentPage: 0, totalChapters: 0 };
+    }
+    if (version === 'none') {
+        return { chapters: [], totalPages: 0, currentPage: 0, totalChapters: 0 };
+    }
+
+    const bookIndex = await loadBookIndex(bookName);
+    if (!bookIndex || bookIndex.totalChapters === 0) {
+        return { chapters: [], totalPages: 0, currentPage: 0, totalChapters: bookIndex ? bookIndex.totalChapters : 0 };
+    }
+
+    const { totalChapters } = bookIndex;
+    const totalPages = Math.ceil(totalChapters / pageSize) || 1;
     const safePage = Math.max(0, Math.min(page, totalPages - 1));
+
+    const startChapterIndex = safePage * pageSize;
+    const endChapterIndex = Math.min(startChapterIndex + pageSize, totalChapters);
+
+    if (startChapterIndex >= endChapterIndex) {
+        return { chapters: [], totalPages, currentPage: safePage, totalChapters };
+    }
     
-    const start = safePage * pageSize;
-    const end = start + pageSize;
-    const chapters = allChapters.slice(start, end);
+    const startChunk = Math.floor(startChapterIndex / CHAPTERS_PER_FILE) + 1;
+    const endChunk = Math.floor((endChapterIndex - 1) / CHAPTERS_PER_FILE) + 1;
+
+    let requiredChapters = [];
+    if (startChunk === endChunk) {
+        const chunk = await loadChapterChunk(bookName, startChunk);
+        requiredChapters = chunk.filter(ch => ch.index >= startChapterIndex && ch.index < endChapterIndex);
+    } else {
+        const chunkPromises = [];
+        for (let i = startChunk; i <= endChunk; i++) {
+            chunkPromises.push(loadChapterChunk(bookName, i));
+        }
+        const chapterChunks = await Promise.all(chunkPromises);
+        const allRelevantChapters = chapterChunks.flat();
+        requiredChapters = allRelevantChapters.filter(ch => ch.index >= startChapterIndex && ch.index < endChapterIndex);
+    }
     
     return {
-        chapters,
+        chapters: requiredChapters,
         totalPages,
         currentPage: safePage,
-        totalChapters: allChapters.length
+        totalChapters,
     };
 }
 
-async function findChapterPage(bookName, chapterIndex, pageSize = 8) {
-    const allChapters = await loadChapterList(bookName);
-    if (!allChapters || allChapters.length === 0) {
-        return {
-            chapters: [],
-            totalPages: 1,
-            currentPage: 0,
-            totalChapters: 0
-        };
-    }
 
-    const currentIndex = allChapters.findIndex(ch => ch.index === chapterIndex);
-    const totalChapters = allChapters.length;
-    const totalPages = Math.ceil(totalChapters / pageSize) || 1;
-    let currentPage = 0;
-
-    if (currentIndex >= 0) {
-        currentPage = Math.floor(currentIndex / pageSize);
-    }
-    
-    const start = currentPage * pageSize;
-    const end = start + pageSize;
-    const chapters = allChapters.slice(start, end);
-
-    return {
-        chapters,
-        totalPages,
-        currentPage,
-        totalChapters
-    };
-}
-
-/**
- * 根据章节索引查找章节信息
- * @param {string} bookName - 书籍目录名
- * @param {number} chapterIndex - 章节索引
- * @returns {Promise<Object|null>} 章节对象
- */
 async function getChapterByIndex(bookName, chapterIndex) {
-    const chapters = await loadChapterList(bookName);
-    return chapters.find(ch => ch.index === chapterIndex) || null;
+    const bookIndex = await loadBookIndex(bookName);
+    if (!bookIndex) return null;
+
+    const chunkIndex = Math.floor(chapterIndex / CHAPTERS_PER_FILE) + 1;
+    
+    const chunk = await loadChapterChunk(bookName, chunkIndex);
+    return chunk.find(ch => ch.index === chapterIndex) || null;
 }
 
-async function getChapterInfo(bookName, chapterIndex) {
-    const chapters = await loadChapterList(bookName);
-    if (!chapters || chapters.length === 0) {
-        return { chapter: null, chapterArrayIndex: -1, totalChapters: 0 };
+async function getTotalChapters(bookName) {
+    const version = await checkVersion(bookName);
+    if (version === 'old') {
+        return 0;
     }
-    
-    let chapterArrayIndex = chapters.findIndex(c => c.index === chapterIndex);
-    
-    if (chapterArrayIndex === -1 && chapters.length > 0) {
-        return { chapter: chapters[0], chapterArrayIndex: 0, totalChapters: chapters.length };
+    if (version === 'none') {
+        return 0;
     }
-    
-    return {
-        chapter: chapters[chapterArrayIndex],
-        chapterArrayIndex: chapterArrayIndex,
-        totalChapters: chapters.length
-    };
+    try {
+        const bookIndex = await loadBookIndex(bookName);
+        return bookIndex.totalChapters;
+    } catch (e) {
+        return 0;
+    }
 }
 
-async function getChapterByArrayIndex(bookName, arrayIndex) {
-    const chapters = await loadChapterList(bookName);
-    if (!chapters || arrayIndex < 0 || arrayIndex >= chapters.length) {
-        return null;
+async function getSyncedChapters(bookName) {
+    const version = await checkVersion(bookName);
+    if (version === 'old') {
+        return 0;
     }
-    return chapters[arrayIndex];
+    if (version === 'none') {
+        return 0;
+    }
+    try {
+        const bookIndex = await loadBookIndex(bookName);
+        return bookIndex.syncedChapters;
+    } catch (e) {
+        return 0;
+    }
 }
 
 export default {
-    loadChapterList,
-    parseChapterList,
+    checkVersion,
+    handleOldVersion,
+    clearCache,
     getChapterPage,
     getChapterByIndex,
-    getChapterInfo,
-    getChapterByArrayIndex,
-    findChapterPage
+    loadBookIndex,
+    getTotalChapters,
+    getSyncedChapters
 };
-

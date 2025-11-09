@@ -48,7 +48,6 @@ export default {
     timer: null,
     bookTitle: "",
     loading: false,
-    isNavigating: false,
     timeFormat: '24h'
   },
   protected: {
@@ -88,7 +87,6 @@ export default {
     this.initChapterList();
   },
   onShow() {
-    this.isNavigating = false;
   },
   onDestroy() {
     if (this.timer) {
@@ -125,24 +123,34 @@ export default {
     this.loading = true;
 
     try {
-      const progress = await bookStorage.get(this.name);
-      const chapterIndex = progress.chapterIndex !== null ? progress.chapterIndex : -1;
+      const [progress, totalChapters] = await Promise.all([
+        bookStorage.get(this.name),
+        chapterManager.getTotalChapters(this.name)
+      ]);
       
-      const result = await chapterManager.findChapterPage(this.name, chapterIndex, PAGE_SIZE);
-      
-      this.visibleChapters = result.chapters;
-      this.currentPage = result.currentPage;
-      this.totalPages = result.totalPages;
-      this.totalChapters = result.totalChapters;
-      if (progress.chapterIndex !== null) {
-        this.currentChapterIndex = progress.chapterIndex;
+      const chapterIndex = (progress && progress.chapterIndex !== null) ? progress.chapterIndex : -1;
+
+      this.totalChapters = totalChapters || 0;
+      this.totalPages = Math.ceil(this.totalChapters / PAGE_SIZE) || 1;
+      this.currentChapterIndex = chapterIndex;
+
+      let targetPage = 0;
+      if (chapterIndex >= 0 && chapterIndex < this.totalChapters) {
+          targetPage = Math.floor(chapterIndex / PAGE_SIZE);
       }
+      
+      const pageData = await chapterManager.getChapterPage(this.name, targetPage, PAGE_SIZE);
+      
+      this.visibleChapters = pageData.chapters;
+      this.currentPage = pageData.currentPage;
 
     } catch (error) {
       prompt.showToast({ message: `章节列表加载失败` });
       this.visibleChapters = [];
+      this.totalChapters = 0;
       this.totalPages = 1;
       this.currentPage = 0;
+      this.currentChapterIndex = -1;
     } finally {
       this.loading = false;
     }
@@ -174,9 +182,6 @@ export default {
     }
   },
   selectChapter(chapter) {
-    if (this.isNavigating) return;
-    this.isNavigating = true;
-
     globalThis.justJumpedFromChapter = true;
     globalThis.newChapterIndex = chapter.index;
     globalThis.newChapterName = chapter.name;
@@ -187,7 +192,6 @@ export default {
   }
 }
 </script>
-
 <style>
 .page {
     width: 192px;

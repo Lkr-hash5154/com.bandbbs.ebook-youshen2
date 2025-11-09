@@ -63,6 +63,7 @@ import router from '@system.router'
 import file from '@system.file'
 import runAsyncFunc from '../../utils/runAsyncFunc.js'
 import storage from '../../common/storage.js'
+import chapterManager from '../../common/chapterManager.js'
 
 export default {
 	private: {
@@ -120,7 +121,10 @@ export default {
 		this.loadFileInfo();
 	},
 	onDestroy() {
-		clearInterval(this.timer);
+		if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
 	},
 	showSummary() {
 		router.push({
@@ -133,14 +137,17 @@ export default {
 	},
 	async loadFileInfo() {
 		const that = this;
-		const bookContentDirUri = `internal://files/books/${this.name}/content/`;
-		const bookInfoUri = `internal://files/books/${this.name}/book_info.json`;
-		const listUri = `internal://files/books/${this.name}/list.txt`;
-		const coverUri = `internal://files/books/${this.name}/cover.jpg`;
+		const bookDirUri = `internal://files/books/${this.name}/`;
+		const bookContentDirUri = `${bookDirUri}content/`;
+		const bookInfoUri = `${bookDirUri}book_info.json`;
+		const coverUri = `${bookDirUri}cover.jpg`;
+		const indexesUri = `${bookDirUri}indexes/`;
+		const lindexUri = `${bookDirUri}lindex.txt`;
+
 
 		file.readText({
 			uri: bookInfoUri,
-			success: function(data) {
+			success: async function(data) {
 				try {
 					const info = JSON.parse(data.text);
 					that.fileName = info.name || that.name;
@@ -154,7 +161,7 @@ export default {
 					that.bookStatus = info.bookStatus || '';
 					that.category = info.category || '';
 
-					that.calculateSyncProgress(info.chapterCount, listUri);
+					await that.calculateSyncProgress();
 				} catch (e) {
 					that.fileName = that.name;
 					that.wordCount = '解析失败';
@@ -179,7 +186,7 @@ export default {
 			let coverSize = 0;
 			let indexSize = 0;
 			try {
-				const listResult = await runAsyncFunc(file.list, { uri: bookContentDirUri });
+				let listResult = await runAsyncFunc(file.list, { uri: bookContentDirUri });
 				if (listResult.fileList) {
 					for (const f of listResult.fileList) {
 						if (f.type === 'file') {
@@ -187,25 +194,37 @@ export default {
 						}
 					}
 				}
+        listResult = null;
 			} catch(e) { }
 			this.chapterStorage = this.formatFileSize(chapterSize);
 			totalSize += chapterSize;
 			try {
-				const coverInfo = await runAsyncFunc(file.get, { uri: coverUri });
+				let coverInfo = await runAsyncFunc(file.get, { uri: coverUri });
 				coverSize = coverInfo.length;
+        coverInfo = null;
 			} catch (e) {
 				coverSize = 0;
 			}
 			this.coverStorage = this.formatFileSize(coverSize);
 			totalSize += coverSize;
 			try {
-				const bookInfo = await runAsyncFunc(file.get, { uri: bookInfoUri });
+				let bookInfo = await runAsyncFunc(file.get, { uri: bookInfoUri });
 				indexSize += bookInfo.length;
+        bookInfo = null;
 			} catch (e) { }
 			try {
-				const listInfo = await runAsyncFunc(file.get, { uri: listUri });
-				indexSize += listInfo.length;
+				let lindexInfo = await runAsyncFunc(file.get, { uri: lindexUri });
+				indexSize += lindexInfo.length;
+                lindexInfo = null;
 			} catch (e) { }
+			try {
+                const indexDirResult = await runAsyncFunc(file.list, { uri: indexesUri });
+                for(const f of indexDirResult.fileList) {
+                    if (f.type === 'file') {
+                        indexSize += f.length;
+                    }
+                }
+            } catch(e) {}
 			this.indexStorage = this.formatFileSize(indexSize);
 			totalSize += indexSize;
 
@@ -217,19 +236,28 @@ export default {
 			this.indexStorage = '计算失败';
 		}
 	},
-	async calculateSyncProgress(totalChapters, listUri) {
-		if (typeof totalChapters !== 'number' || totalChapters <= 0) {
-			this.syncProgress = '无需同步';
+	async calculateSyncProgress() {
+		const version = await chapterManager.checkVersion(this.name);
+		if (version === 'old') {
+			this.syncProgress = '格式过旧，需重新同步';
 			return;
 		}
-
+		if (version === 'none') {
+			this.syncProgress = '无章节信息';
+			return;
+		}
 		try {
-			const listData = await runAsyncFunc(file.readText, { uri: listUri });
-			const syncedChapters = listData.text.split('\n').filter(Boolean).length;
+			const bookIndex = await chapterManager.loadBookIndex(this.name);
+			const { totalChapters, syncedChapters } = bookIndex;
+
+			if (typeof totalChapters !== 'number' || totalChapters <= 0) {
+				this.syncProgress = '无需同步';
+				return;
+			}
 			const progress = Math.floor((syncedChapters / totalChapters) * 100);
 			this.syncProgress = `${progress}% (${syncedChapters}/${totalChapters}章)`;
 		} catch (e) {
-			this.syncProgress = `0% (0/${totalChapters}章)`;
+			this.syncProgress = '计算失败';
 		}
 	},
 	formatFileSize(bytes) {
