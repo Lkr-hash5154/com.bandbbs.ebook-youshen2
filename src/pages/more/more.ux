@@ -2,172 +2,65 @@
 	<div class="page" style="flex-direction: column;">
   
 	<list class="list">
-		  <list-item class="item" @click="routerTo('opacity')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">字体亮度</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">设置阅读字体亮度</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('screenBrightness')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">屏幕亮度</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">应用内屏幕亮度</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('fontSetting')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">字号</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">设置阅读字体大小</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('marginSetting')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">垂直边距</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">调整屏幕留白</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('chapterSwitchStyle')" type="item">
+		<list-item class="item" @click="routerTo('readingSetting')" type="item">
 			<div class="item-content">
-				<text class="itemtext">翻章方式</text>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">按钮或滑动翻章</marquee>
+				<text class="itemtext" static>阅读设置</text>
+				<marquee class="itemtext2" scrollamount="20" text-offset="25" static>字体、亮度等</marquee>
 			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-	  	</list-item>
-		  <list-item class="item" @click="routerTo('chapterSwitchSetting')" type="item" if="{{chapterSwitchStyle == 'button'}}">
-			<div class="item-content">
-				<text class="itemtext">换章按钮</text>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">调整翻章按钮</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-	  	</list-item>
-		  <list-item class="item" @click="routerTo('chapterSwitchSensitivity')" type="item" if="{{chapterSwitchStyle == 'boundary'}}">
-			<div class="item-content">
-				<marquee scrollamount="30" text-offset="25" class="itemtext">换章灵敏度</marquee>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">越界换章灵敏度</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+			<img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
 		</list-item>
-		<list-item class="item" @click="routerTo('swipeSensitivity')" type="item" if="{{chapterSwitchStyle == 'swipe'}}">
+		<list-item class="item" @click="routerTo('performanceSetting')" type="item">
 			<div class="item-content">
-				<marquee scrollamount="30" text-offset="25" class="itemtext">换章灵敏度</marquee>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">左右滑动灵敏度</marquee>
+				<text class="itemtext" static>性能设置</text>
+				<marquee class="itemtext2" scrollamount="20" text-offset="25" static>分段大小等</marquee>
 			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+			<img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
 		</list-item>
-		  <list-item class="item" @click="routerTo('swipe')" type="item">
+		  <list-item class="item" @click="routerTo('shelfSetting')" type="item">
 			  <div class="item-content">
-				  <text class="itemtext">滑动翻页</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">管理滑动翻页选项</marquee>
+				  <text class="itemtext" static>书架设置</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>书架样式等</marquee>
 			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
 		  </list-item>
-		  <list-item class="item" @click="routerTo('shelfStyle')" type="item">
-			<div class="item-content">
-				<text class="itemtext">书架样式</text>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">列表或封面视图</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-	  	</list-item>
-		  <list-item class="item" @click="routerTo('shelfPageSizeSetting')" type="item">
-			<div class="item-content">
-				<marquee class="itemtext" scrollamount="30" text-offset="25">书架每页数量</marquee>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">调整书架分页数量</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-	  	</list-item>
-		  <list-item class="item" @click="routerTo('gestureSetting')" type="item">
-			<div class="item-content">
-				<text class="itemtext">手势设置</text>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">单击或双击切换UI</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		</list-item>
-		  <list-item class="item" @click="routerTo('autoRead')" type="item">
+		  <list-item class="item" @click="routerTo('interactionSetting')" type="item">
 			  <div class="item-content">
-				  <text class="itemtext">自动翻页</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">设置自动翻页选项</marquee>
+				  <text class="itemtext" static>交互设置</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>手势、按键等</marquee>
 			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('autoReadDistanceSetting')" type="item">
-			<div class="item-content">
-				<text class="itemtext">翻页距离</text>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">自动翻页距离</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-	  	</list-item>
-		  <list-item class="item" @click="routerTo('timeFormatSetting')" type="item">
-			<div class="item-content">
-				<text class="itemtext">时间格式</text>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">时间显示方式</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-	  	</list-item>
-		  <list-item class="item" @click="routerTo('teacherScreen')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">老师屏</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">快速退出应用</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('pageSizeSetting')" type="item">
-			  <div class="item-content">
-				  <text class="itemtext">分段大小</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">翻页加载的文本量</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-		  </list-item>
-		  <list-item class="item" @click="routerTo('preventParagraphSplittingSetting')" type="item">
-			  <div class="item-content">
-				  <marquee class="itemtext" scrollamount="30" text-offset="25">段落防分割</marquee>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">避免段落被截断</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
 		  </list-item>
 		  <list-item class="item" @click="clearBooks" type="item">
 			  <div class="item-content">
-				  <text class="itemtext">清空数据</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">清空全部数据</marquee>
+				  <text class="itemtext" static>清空数据</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>清空全部数据</marquee>
 			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
 		  </list-item>
 		  <list-item class="item" @click="routerTo('tutorial')" type="item">
-			<div class="item-content">
-				<text class="itemtext">教程中心</text>
-				<marquee class="itemtext2" scrollamount="20" text-offset="25">查看应用使用教程</marquee>
-			</div>
-			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
-	  	</list-item>
+			  <div class="item-content">
+				  <text class="itemtext" static>教程中心</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>查看应用使用教程</marquee>
+			  </div>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
+		  </list-item>
 		  <list-item class="item" @click="routerTo('push')" type="item">
 			  <div class="item-content">
-				  <text class="itemtext">书籍同步</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">连接手机同步内容</marquee>
+				  <text class="itemtext" static>书籍同步</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>连接手机同步内容</marquee>
 			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
 		  </list-item>
 		  <list-item class="item" @click="routerTo('about')" type="item">
 			  <div class="item-content">
-				  <text class="itemtext">关于</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25">关于电子书</marquee>
+				  <text class="itemtext" static>关于</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>关于电子书</marquee>
 			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
 		  </list-item>
-	  </list>
-  
-	  
-	  <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
-	  <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
-		{{nowTime}}
-	  </text>
-	  <text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
-		  设置
-	  </text>
+		</list>
 	</div>
-  </template>
+	</template>	
   
   <script>
   import router from '@system.router'

@@ -156,10 +156,22 @@
       },
       "pages/preventParagraphSplittingSetting": {
         "component": "preventParagraphSplittingSetting"
-      }
+      },
+      "pages/readingSetting": {
+        "component": "readingSetting"
+      },
+      "pages/shelfSetting": {
+        "component": "shelfSetting"
+      },
+      "pages/interactionSetting": {
+        "component": "interactionSetting"
+      },
+      "pages/performanceSetting": {
+        "component": "performanceSetting"
     }
   },
   "display": {
     "backgroundColor": "#000000"
+    }
   }
 }
