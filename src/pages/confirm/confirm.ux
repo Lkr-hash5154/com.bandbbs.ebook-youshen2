@@ -52,7 +52,10 @@ export default {
         }, 1000);
     },
     onDestroy() {
-        clearInterval(this.timer);
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
     },
     back() {
         if (this.action === 'versionError') {
@@ -84,13 +87,15 @@ export default {
         }
 
         try {
-            const progress = await bookStorage.get(this.bookName);
+            let progress = await bookStorage.get(this.bookName);
             if (progress.bookmarks && progress.bookmarks[this.bookmarkIndex] !== undefined) {
                 progress.bookmarks.splice(this.bookmarkIndex, 1);
                 await bookStorage.set(this.bookName, progress);
+                progress = null;
                 prompt.showToast({ message: '删除成功' });
                 router.back();
             } else {
+                progress = null;
                 prompt.showToast({ message: '找不到书签' });
                 router.back();
             }
@@ -100,6 +105,7 @@ export default {
         }
     },
     deleteBook() {
+        prompt.showToast({ message: '开始删除...', duration: 500 });
         if (!this.cPath) {
             prompt.showToast({ message: '参数错误' });
             router.back();
@@ -108,6 +114,12 @@ export default {
         const that = this;
         const dirName = this.cPath.split('/').pop();
 
+        if (!dirName) {
+            prompt.showToast({ message: '书籍目录名无效' });
+            router.back();
+            return;
+        }
+
         file.rmdir({
             uri: this.cPath,
             recursive: true,
@@ -115,18 +127,26 @@ export default {
                 that.updateBookshelf(dirName);
             },
             fail: (data, code) => {
-                prompt.showToast({ message: `删除失败: ${code}`, duration: 1000 });
-                router.back();
+                // 即使删除目录失败，也尝试更新书架
+                // 这可以处理目录不存在但书架条目存在的情况
+                that.updateBookshelf(dirName);
             }
         });
     },
     updateBookshelf(dirName) {
+        if (!dirName) {
+            // 双重保险
+            prompt.showToast({ message: '删除成功', duration: 1000 });
+            router.replace({ uri: '/pages/index' });
+            return;
+        }
         file.readText({
             uri: BOOKSHELF_URI,
             success: function(data) {
                 try {
-                    const bookshelf = JSON.parse(data.text);
+                    let bookshelf = JSON.parse(data.text);
                     const newBookshelf = bookshelf.filter(b => b.dirName !== dirName);
+                    bookshelf = null;
                     file.writeText({
                         uri: BOOKSHELF_URI,
                         text: JSON.stringify(newBookshelf),
@@ -147,6 +167,7 @@ export default {
         });
     },
     clearBookshelf() {
+        prompt.showToast({ message: '开始删除...', duration: 500 });
         file.rmdir({
             uri: 'internal://files/books/',
             recursive: true,
