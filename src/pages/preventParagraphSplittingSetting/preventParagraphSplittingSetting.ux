@@ -2,8 +2,8 @@
   <div class="page" style="flex-direction: column;">
     <div class="item">
       <text style="font-size: 20px;font-weight:bold;color: rgba(255, 255, 255, 0.6);text-align: center;margin-bottom:80px">开启后将避免段落被分页截断。</text>
-      <img static src="/common/images/Switch_ON.png" style="width: 113px;height: 80px;" @click="onClick" if="{{enable}}"/>
-      <img static src="/common/images/Switch_OFF.png" style="width: 113px;height: 80px;" @click="onClick" else/>
+      <img static src="/common/images/Switch_ON.png" style="width: 102px;height: 72px;" @click="onClick" if="{{enable}}"/>
+      <img static src="/common/images/Switch_OFF.png" style="width: 102px;height: 72px;" @click="onClick" else/>
       <text style="font-size: 30px;font-weight:bold;color: white;width: 100%;text-align: center;">
         {{enable ? 'ON' : 'OFF'}}
       </text>

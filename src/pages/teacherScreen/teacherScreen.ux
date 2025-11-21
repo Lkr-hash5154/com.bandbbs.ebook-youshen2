@@ -1,8 +1,8 @@
 <template>
 	<div class="page" style="flex-direction: column;">
 		<div class="item">
-			<img static src="/common/images/Switch_ON.png" style="width: 113px;height: 80px;" @click="toggleFeature" if="{{isEnabled}}"/>
-			<img static src="/common/images/Switch_OFF.png" style="width: 113px;height: 80px;" @click="toggleFeature" else/>
+			<img static src="/common/images/Switch_ON.png" style="width: 102px;height: 72px;" @click="toggleFeature" if="{{isEnabled}}"/>
+			<img static src="/common/images/Switch_OFF.png" style="width: 102px;height: 72px;" @click="toggleFeature" else/>
 			<text style="font-size: 30px;font-weight:bold;color: white;width: 100%;text-align: center;top: 25px;">
 				{{isEnabled ? 'ON' : 'OFF'}}
 			</text>
