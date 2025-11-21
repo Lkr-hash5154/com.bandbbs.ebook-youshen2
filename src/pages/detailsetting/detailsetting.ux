@@ -33,7 +33,7 @@
 				<marquee class="itemtext" scrollamount="30" text-offset="25">屏幕常亮</marquee>
 				<marquee class="itemtext2" scrollamount="20" text-offset="25">阅读器保持常亮</marquee>
 			</div>
-			<img src="{{isKeepScreenOn ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 40px;"/>
+			<img src="{{isKeepScreenOn ? '/common/images/on.png' : '/common/images/off.png'}}" style="width:40px;height: 28px;"/>
 		</list-item>
 		  <list-item type="item" class="item" @click="backToFirst">
 			  <div class="item-content">

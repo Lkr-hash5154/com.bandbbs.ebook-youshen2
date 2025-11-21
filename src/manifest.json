@@ -106,6 +106,9 @@
       "pages/bookmarks": {
         "component": "bookmarks"
       },
+      "pages/editBookmark": {
+        "component": "editBookmark"
+      },
       "pages/pageSizeSetting": {
         "component": "pageSizeSetting"
       },

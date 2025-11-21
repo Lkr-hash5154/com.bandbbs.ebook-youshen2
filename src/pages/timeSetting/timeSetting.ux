@@ -6,7 +6,7 @@
 				<text class="itemtext" static>开关</text>
 				<marquee scrollamount="30" text-offset="25" class="itemtext2" static>在阅读页始终显示时间</marquee>
 			</div>
-			<img src="{{alwaysShowTime ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 40px;"/>
+			<img src="{{alwaysShowTime ? '/common/images/on.png' : '/common/images/off.png'}}" style="width:40px;height: 28px;"/>
 		</list-item>
 		<list-item class="item" @click="routerTo('alwaysShowTimeSensitivitySetting')" if="{{alwaysShowTime}}" type="item">
 			<div class="item-content">
