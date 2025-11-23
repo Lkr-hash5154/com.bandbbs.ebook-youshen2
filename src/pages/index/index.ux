@@ -17,7 +17,7 @@
             <div class="pagination-controls">
               <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button"/>
               <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
-              <img src="/common/images/next.pnge" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button"/>
+              <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button"/>
             </div>
           </list-item>
 	  </list>

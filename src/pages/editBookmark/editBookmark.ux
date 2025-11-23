@@ -161,7 +161,7 @@ export default {
     line-height: 40px;
 }
 .input-placeholder {
-    font-size: 28px;
+    font-size: 24px;
     color: rgba(255, 255, 255, 0.3);
     line-height: 40px;
 }

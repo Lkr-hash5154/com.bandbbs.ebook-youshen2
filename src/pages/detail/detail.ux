@@ -959,6 +959,7 @@
   }
 </script>
 
+<style>
 .page {
 	width: 192px;
 	height: 490px;
