@@ -1,0 +1,143 @@
+<template>
+	<div style="width:192px;height:490px;padding:12px;box-sizing:border-box;background-color: rgb({{bgR}},{{bgG}},{{bgB}});">
+		<text style="font-weight:bold;font-size:20px;margin-bottom:8px;">背景颜色设置</text>
+		<div style="margin-top:8px;">
+			<text>R: {{bgR}}</text>
+			<slider min="0" max="255" step="1" value="{{bgR}}" @change="onRChange" />
+		</div>
+		<div style="margin-top:8px;">
+			<text>G: {{bgG}}</text>
+			<slider min="0" max="255" step="1" value="{{bgG}}" @change="onGChange" />
+		</div>
+		<div style="margin-top:8px;">
+			<text>B: {{bgB}}</text>
+			<slider min="0" max="255" step="1" value="{{bgB}}" @change="onBChange" />
+		</div>
+		<div style="margin-top:12px;height:80px;border-radius:6px;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;background-color: rgb({{bgR}},{{bgG}},{{bgB}});">
+			<text style="color: rgba(255,255,255,0.9);font-weight:bold;">预览</text>
+		</div>
+		<div style="margin-top:12px;flex-direction:row;justify-content:space-between;">
+			<button @click="onSave" style="width:88px;height:40px;">保存</button>
+			<button @click="onCancel" style="width:88px;height:40px;">取消</button>
+		</div>
+        <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
+        <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+			{{nowTime}}
+		</text>
+		<text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+			背景颜色
+		</text>
+	</div>
+</template>
+
+<script>
+import storage from '../../common/storage.js'
+import router from '@system.router'
+
+export default {
+	private: {
+		bgR: 0,
+		bgG: 0,
+		bgB: 0
+	},
+    onInit() {
+    this.loadTimeFormat();
+		const that = this;
+    this.timer = setInterval(function(){
+      that.updateTime();
+    }, 60000);
+    this.appName=app.getInfo().name;
+    this.appVer=app.getInfo().versionName;
+    this.parseVersion();
+	},
+  onShow(){
+	  this.updateTime();
+  },
+  onDestroy(){
+	  clearInterval(this.timer);
+  },
+	back(){
+		router.back();
+	},
+  loadTimeFormat() {
+    storage.get({
+        key: 'EBOOK_TIME_FORMAT',
+        success: (data) => {
+            if (data) {
+                this.timeFormat = data;
+            }
+            this.updateTime();
+        },
+        fail: () => {
+            this.updateTime();
+        }
+    });
+  },
+  updateTime() {
+    const date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    if (this.timeFormat === '12h') {
+        let ampm = hours >= 12 ? '下午' : '上午';
+        hours = hours % 12;
+        hours = hours ? hours : 12; 
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        this.nowTime = `${ampm} ${hours}:${minutes}`;
+    } else {
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        this.nowTime = `${hours}:${minutes}`;
+    }
+  },
+	onInit() {
+		const get = (key, cb) => {
+			storage.get({
+				key,
+				success: data => cb(data !== null && data !== '' ? parseInt(data) : 0),
+				fail: () => cb(0)
+			});
+		}
+		get('EBOOK_BG_R', v => { this.bgR = v; });
+		get('EBOOK_BG_G', v => { this.bgG = v; });
+		get('EBOOK_BG_B', v => { this.bgB = v; });
+	},
+	saveToStorage() {
+		storage.set({ key: 'EBOOK_BG_R', value: String(this.bgR) });
+		storage.set({ key: 'EBOOK_BG_G', value: String(this.bgG) });
+		storage.set({ key: 'EBOOK_BG_B', value: String(this.bgB) });
+		globalThis.bgR = this.bgR;
+		globalThis.bgG = this.bgG;
+		globalThis.bgB = this.bgB;
+	},
+	onRChange(e) {
+		const v = parseInt(e && e.value !== undefined ? e.value : e);
+		this.bgR = isNaN(v) ? 0 : v;
+		this.saveToStorage();
+	},
+	onGChange(e) {
+		const v = parseInt(e && e.value !== undefined ? e.value : e);
+		this.bgG = isNaN(v) ? 0 : v;
+		this.saveToStorage();
+	},
+	onBChange(e) {
+		const v = parseInt(e && e.value !== undefined ? e.value : e);
+		this.bgB = isNaN(v) ? 0 : v;
+		this.saveToStorage();
+	},
+	onSave() {
+		this.saveToStorage();
+		router.back();
+	},
+	onCancel() {
+		router.back();
+	}
+}
+</script>
+
+<style>
+.page {
+	width: 192px;
+	height: 490px;
+	background-color: #000000;
+}
+</style>

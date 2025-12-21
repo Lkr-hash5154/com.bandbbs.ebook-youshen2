@@ -16,6 +16,13 @@
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
 		  </list-item>
+		   <list-item class="item" @click="routerTo('BackGroundColorSetting')" type="item">
+			  <div class="item-content">
+				  <text class="itemtext" static>背景颜色</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>背景颜色调整</marquee>
+			  </div>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static/>
+		  </list-item>
 		  <list-item class="item" @click="routerTo('timeSetting')" type="item">
 			<div class="item-content">
 				<text class="itemtext" static>时间常驻</text>

@@ -1,5 +1,5 @@
 <template>
-	<div class="page">
+	<div class="page" style="background-color: rgb({{bgR}},{{bgG}},{{bgB}});">
 	  <scroll id="scrollId"
 		style="position: absolute; width: 192px; height: {{scrollHeight}}px; top: {{verticalMargin}}px;"
 		scroll-y="{{true}}"
@@ -125,7 +125,10 @@
 	  saveIntervalId: null,
 	  alwaysShowTime: false,
 	  alwaysShowTimeSensitivity: 50,
-	  isNearTopForHd: false
+	  isNearTopForHd: false,
+	  bgR: 0,
+	  bgG: 0,
+	  bgB: 0,
 	},
 	protected: {
 	  name: '',
@@ -218,7 +221,10 @@
 		  { key: 'EBOOK_PROGRESS_SAVE_MODE', prop: 'saveMode', type: 'string', default: 'exit' },
 		  { key: 'EBOOK_PROGRESS_SAVE_INTERVAL', prop: 'saveIntervalValue', type: 'int', default: 10 },
 		  { key: 'EBOOK_ALWAYS_SHOW_TIME', prop: 'alwaysShowTime', type: 'bool', default: false },
-		  { key: 'EBOOK_ALWAYS_SHOW_TIME_SENSITIVITY', prop: 'alwaysShowTimeSensitivity', type: 'int', default: 200 }
+		  { key: 'EBOOK_ALWAYS_SHOW_TIME_SENSITIVITY', prop: 'alwaysShowTimeSensitivity', type: 'int', default: 200 },
++		  { key: 'EBOOK_BG_R', prop: 'bgR', type: 'int', default: 0 },
++		  { key: 'EBOOK_BG_G', prop: 'bgG', type: 'int', default: 0 },
++		  { key: 'EBOOK_BG_B', prop: 'bgB', type: 'int', default: 0 }
 	  ];
   
 	  const promises = settingsConfig.map(s => getSetting(s.key, s.default));
@@ -240,6 +246,11 @@
 			  default: this[config.prop] = value; break;
 		  }
 	  });
+
+	  // 如果通过设置页实时修改，优先使用 globalThis 的值（点击保存或滑块时写入）
+	  if (typeof globalThis.bgR !== 'undefined') this.bgR = parseInt(globalThis.bgR);
+	  if (typeof globalThis.bgG !== 'undefined') this.bgG = parseInt(globalThis.bgG);
+	  if (typeof globalThis.bgB !== 'undefined') this.bgB = parseInt(globalThis.bgB);
   
 	  this.lineHeight = parseInt((-0.01)*(this.fontSize**2) + 1.62*this.fontSize - 3.23);
 	  this.updateScrollHeight();
