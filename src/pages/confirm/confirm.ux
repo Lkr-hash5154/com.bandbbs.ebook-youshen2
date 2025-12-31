@@ -21,8 +21,6 @@ import file from '@system.file'
 import storage from '../../common/storage.js'
 import bookStorage from '../../common/bookStorage.js'
 
-const BOOKSHELF_URI = 'internal://files/books/bookshelf.json';
-
 export default {
     private: {
         nowTime: "00:00",
@@ -114,6 +112,12 @@ export default {
         const that = this;
         const dirName = this.cPath.split('/').pop();
 
+        if (!dirName) {
+            prompt.showToast({ message: '书籍目录名无效' });
+            router.back();
+            return;
+        }
+
         file.rmdir({
             uri: this.cPath,
             recursive: true,
@@ -121,37 +125,19 @@ export default {
                 that.updateBookshelf(dirName);
             },
             fail: (data, code) => {
-                prompt.showToast({ message: `删除失败: ${code}`, duration: 1000 });
-                router.back();
+                that.updateBookshelf(dirName);
             }
         });
     },
-    updateBookshelf(dirName) {
-        file.readText({
-            uri: BOOKSHELF_URI,
-            success: function(data) {
-                try {
-                    let bookshelf = JSON.parse(data.text);
-                    const newBookshelf = bookshelf.filter(b => b.dirName !== dirName);
-                    bookshelf = null;
-                    file.writeText({
-                        uri: BOOKSHELF_URI,
-                        text: JSON.stringify(newBookshelf),
-                        complete: function() {
-                            prompt.showToast({ message: '删除成功', duration: 1000 });
-                            router.replace({ uri: '/pages/index' });
-                        }
-                    });
-                } catch (e) {
-                     prompt.showToast({ message: '删除成功', duration: 1000 });
-                     router.replace({ uri: '/pages/index' });
-                }
-            },
-            fail: function() {
-                prompt.showToast({ message: '删除成功', duration: 1000 });
-                router.replace({ uri: '/pages/index' });
-            }
-        });
+    async updateBookshelf(dirName) {
+        if (!dirName) {
+            prompt.showToast({ message: '删除成功', duration: 1000 });
+            router.replace({ uri: '/pages/index' });
+            return;
+        }
+        await bookStorage.removeBook(dirName);
+        prompt.showToast({ message: '删除成功', duration: 1000 });
+        router.replace({ uri: '/pages/index' });
     },
     clearBookshelf() {
         prompt.showToast({ message: '开始删除...', duration: 500 });

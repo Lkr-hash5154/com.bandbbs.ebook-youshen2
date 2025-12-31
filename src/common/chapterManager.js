@@ -1,5 +1,6 @@
 import file from '@system.file';
 import router from '@system.router';
+import runAsyncFunc from '../utils/runAsyncFunc.js';
 
 const bookIndexCache = new Map();
 const chapterChunkCache = new Map();
@@ -28,20 +29,10 @@ async function handleOldVersion(bookName) {
         params: {
             action: 'deleteBook',
             title: "不兼容格式",
-            subText: "不兼容旧的索引格式，删除后重新同步才能阅读。",
+            subText: "此书籍使用了旧的索引格式，必须删除后重新同步才能阅读。",
             confirmText: `需要删除数据`,
             cPath: 'internal://files/books/' + bookName
         }
-    });
-}
-
-function runAsyncFunc(fn, options) {
-    return new Promise((resolve, reject) => {
-        fn({
-            ...options,
-            success: resolve,
-            fail: reject,
-        });
     });
 }
 

@@ -10,8 +10,6 @@
 		<number style="position: absolute; bottom: 6px" max="100" min="10" step="1" unit="%" value="{{opacity}}" @change="change" name="当前亮度">
 		</number>
 
-		
-		<img static src="/common/images/reset.png" @click="reset" style="position: absolute;left: 140px;bottom: 160px;width: 48px;height: 48px;"/>
 		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 		  {{nowTime}}
 		</text>
