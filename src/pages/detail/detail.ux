@@ -50,7 +50,6 @@
 		
 	</div>
   </template>
-
   <script>
 	import prompt from '@system.prompt'
 	import file from '@system.file'
@@ -61,7 +60,6 @@
 	import brightness from '@system.brightness'
 	import app from '@system.app'
 
-<<<<<<< HEAD
 	export default {
 	  allSize: 0,
     autoInterval: null,
@@ -154,83 +152,12 @@
 	updatePageNumber(){
 		this.currentPage = this.currentChapterIndexInAll + 1;
 		this.totalPages = this.totalChapters;
-=======
-  export default {
-	allSize: 0,
-  autoInterval: null,
-  cPath: "",
-	private: {
-	  txtSizePage: 400,
-	  fontSize: 30,
-	  lineHeight: 34,
-	  pageHeigh: 480,
-	  verticalMargin: 10,
-	  scrollHeight: 480,
-	  showSetting: true,
-	  loadingNext: false,
-	  loadingPrev: false,
-	  page1: { text: "加载中...", offset: 0, length: 0 },
-	  page2: null,
-	  currentFileOffset: 0,
-	  opacity: 100,
-	  swipe: 'column',
-	  auto: false,
-	  nowTime: "00:00",
-	  timer: null,
-	  savedScrollOffset: 0,
-		currentScrollTop: 0,
-	  totalPages: 0,
-	  currentPage: 0,
-	  isKeepScreenOn: false,
-	  currentChapterIndexInAll: 0,
-	  currentChapterName: "",
-	  isAtChapterEnd: false,
-	  isAtChapterStart: false,
-	  scrollTopValue: 0,
-	  wait: false,
-	  longPressTriggered: false,
-	  saveDataTimeout: null,
-	  totalChapters: 0,
-	  teacherScreenEnabled: false,
-	  clickCount: 0,
-	  clickTimeout: null,
-	  gestureMode: 'single',
-	  gestureClickCount: 0,
-	  gestureClickTimeout: null,
-	  chapterSwitchHeight: 80,
-	  chapterSwitchSensitivity: 50,
-	  swipeSensitivity: 80,
-	  chapterSwitchStyle: 'button',
-	  touchStartY: 0,
-	  overscrollDistance: 0,
-	  isTouching: false,
-	  bounces: false,
-	  touchStartX: 0,
-	  touchEndX: 0,
-	  isInitialized: false,
-	  longPressTimeout: null,
-	  isProcessingClick: false,
-	  autoReadDistance: 100,
-	  timeFormat: '24h',
-	  contentHeight: 0,
-	  preventParagraphSplitting: false,
-	  saveMode: 'exit',
-	  saveIntervalValue: 10,
-	  saveIntervalId: null,
-	  alwaysShowTime: false,
-	  alwaysShowTimeSensitivity: 50,
-	  isNearTopForHd: false,
-	  bgR: 0,
-	  bgG: 0,
-	  bgB: 0,
->>>>>>> 74e43730c4ae86c9ae9596cf5b5f0bd18fd85aa8
 	},
 	onInit(){
 		this.updateTime();
 		this.timer = setInterval(() => { this.updateTime(); }, 1000);
 		globalThis.isKeepScreenOn = this.isKeepScreenOn;
 	},
-<<<<<<< HEAD
 	async onShow(){
 		await this.loadSettings();
 		if (typeof globalThis.isKeepScreenOn !== 'undefined') {
@@ -343,158 +270,6 @@
 			this.totalChapters = 0;
 			return;
 		}
-=======
-	updateTime() {
-	  const date = new Date();
-	  let hours = date.getHours();
-	  let minutes = date.getMinutes();
-	  if (this.timeFormat === '12h') {
-		  let ampm = hours >= 12 ? '下午' : '上午';
-		  hours = hours % 12;
-		  hours = hours ? hours : 12;
-		  minutes = minutes < 10 ? '0' + minutes : minutes;
-		  this.nowTime = `${ampm} ${hours}:${minutes}`;
-	  } else {
-		  hours = hours < 10 ? '0' + hours : hours;
-		  minutes = minutes < 10 ? '0' + minutes : minutes;
-		  this.nowTime = `${hours}:${minutes}`;
-	  }
-   },
-  updatePageNumber(){
-	  this.currentPage = this.currentChapterIndexInAll + 1;
-	  this.totalPages = this.totalChapters;
-  },
-  onInit(){
-	  this.updateTime();
-	  this.timer = setInterval(() => { this.updateTime(); }, 1000);
-	  globalThis.isKeepScreenOn = this.isKeepScreenOn;
-  },
-  async onShow(){
-	  await this.loadSettings();
-	  if (this.saveMode === 'periodic' && !this.saveIntervalId) {
-		  this.saveIntervalId = setInterval(() => {
-			  this._performSave();
-		  }, this.saveIntervalValue * 1000);
-	  }
-	  if (typeof globalThis.isKeepScreenOn !== 'undefined') {
-		  if (this.isKeepScreenOn !== globalThis.isKeepScreenOn) {
-			  this.isKeepScreenOn = globalThis.isKeepScreenOn;
-			  brightness.setKeepScreenOn({ keepScreenOn: this.isKeepScreenOn });
-			  prompt.showToast({ message: this.isKeepScreenOn ? '已开启屏幕常亮' : '已关闭屏幕常亮' });
-		  }
-	  }
-	  storage.get({
-		  key: 'EBOOK_TEACHER_SCREEN_ENABLED',
-		  success: (data) => {
-			  this.teacherScreenEnabled = data === 'true';
-		  }
-	  });
-	  const isChapterJump = globalThis.justJumpedFromChapter || globalThis.justJumpedFromBookmark || globalThis.justJumpedFromPageNumber;
-	  if (!this.isInitialized || isChapterJump) {
-		  if(globalThis.justJumpedFromChapter) {
-			  this.chapterIndex = globalThis.newChapterIndex;
-			  this.chapterName = globalThis.newChapterName;
-			  delete globalThis.newChapterIndex;
-			  delete globalThis.newChapterName;
-		  }
-		  await this.loadBook();
-		  this.isInitialized = true;
-	  }
-  },
-  async loadSettings() {
-	  const getSetting = (key, defaultValue) => new Promise(resolve => {
-		  storage.get({
-			  key,
-			  success: data => resolve(data !== null && data !== '' ? data : defaultValue),
-			  fail: () => resolve(defaultValue)
-		  });
-	  });
-  
-	  const settingsConfig = [
-		  { key: 'EBOOK_TXTSZPAGE', prop: 'txtSizePage', type: 'int', default: 400 },
-		  { key: 'EBOOK_VERTICAL_MARGIN', prop: 'verticalMargin', type: 'int', default: 10 },
-		  { key: 'EBOOK_FONT', prop: 'fontSize', type: 'int', default: 30 },
-		  { key: 'EBOOK_OPACITY', prop: 'opacity', type: 'int', default: 100 },
-		  { key: 'EBOOK_SWIPE', prop: 'swipe', type: 'string', default: 'column' },
-		  { key: 'EBOOK_AUTO', prop: 'auto', type: 'json', default: null },
-		  { key: 'EBOOK_SHOW_PROGRESS_BAR', prop: 'showProgressBar', type: 'bool', default: true },
-		  { key: 'EBOOK_PROGRESS_BAR_HEIGHT', prop: 'progressBarHeight', type: 'int', default: 8 },
-		  { key: 'EBOOK_GESTURE', prop: 'gestureMode', type: 'string', default: 'single' },
-		  { key: 'EBOOK_CHAPTER_SWITCH_HEIGHT', prop: 'chapterSwitchHeight', type: 'int', default: 80 },
-		  { key: 'EBOOK_CHAPTER_SWITCH_SENSITIVITY', prop: 'chapterSwitchSensitivity', type: 'int', default: 50 },
-		  { key: 'EBOOK_SWIPE_SENSITIVITY', prop: 'swipeSensitivity', type: 'int', default: 80 },
-		  { key: 'EBOOK_CHAPTER_SWITCH_STYLE', prop: 'chapterSwitchStyle', type: 'string', default: 'button' },
-		  { key: 'EBOOK_AUTO_READ_DISTANCE', prop: 'autoReadDistance', type: 'int', default: 100 },
-		  { key: 'EBOOK_PREVENT_PARAGRAPH_SPLITTING', prop: 'preventParagraphSplitting', type: 'bool', default: false },
-		  { key: 'EBOOK_TIME_FORMAT', prop: 'timeFormat', type: 'string', default: '24h' },
-		  { key: 'EBOOK_PROGRESS_SAVE_MODE', prop: 'saveMode', type: 'string', default: 'exit' },
-		  { key: 'EBOOK_PROGRESS_SAVE_INTERVAL', prop: 'saveIntervalValue', type: 'int', default: 10 },
-		  { key: 'EBOOK_ALWAYS_SHOW_TIME', prop: 'alwaysShowTime', type: 'bool', default: false },
-		  { key: 'EBOOK_ALWAYS_SHOW_TIME_SENSITIVITY', prop: 'alwaysShowTimeSensitivity', type: 'int', default: 200 },
-+		  { key: 'EBOOK_BG_R', prop: 'bgR', type: 'int', default: 0 },
-+		  { key: 'EBOOK_BG_G', prop: 'bgG', type: 'int', default: 0 },
-+		  { key: 'EBOOK_BG_B', prop: 'bgB', type: 'int', default: 0 }
-	  ];
-  
-	  const promises = settingsConfig.map(s => getSetting(s.key, s.default));
-	  const results = await Promise.all(promises);
-  
-	  results.forEach((data, i) => {
-		  const config = settingsConfig[i];
-		  let value = data;
-		  
-		  switch (config.type) {
-			  case 'int': this[config.prop] = parseInt(value); break;
-			  case 'bool': this[config.prop] = value === 'true' || value === true; break;
-			  case 'json': 
-				  if (value) {
-					  const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-					  if(parsed && parsed.enable) this.auto = parsed.speed;
-				  }
-				  break;
-			  default: this[config.prop] = value; break;
-		  }
-	  });
-
-	  // 如果通过设置页实时修改，优先使用 globalThis 的值（点击保存或滑块时写入）
-	  if (typeof globalThis.bgR !== 'undefined') this.bgR = parseInt(globalThis.bgR);
-	  if (typeof globalThis.bgG !== 'undefined') this.bgG = parseInt(globalThis.bgG);
-	  if (typeof globalThis.bgB !== 'undefined') this.bgB = parseInt(globalThis.bgB);
-  
-	  this.lineHeight = parseInt((-0.01)*(this.fontSize**2) + 1.62*this.fontSize - 3.23);
-	  this.updateScrollHeight();
-  },
-  updateContentHeight() {
-	  setTimeout(() => {
-		  this.$element("contentContainer").getBoundingClientRect({
-			  success: (rect) => {
-				  this.contentHeight = rect.height;
-			  }
-		  });
-	  }, 50);
-  },
-  updateScrollHeight() {
-	  this.scrollHeight = 490 - this.verticalMargin * 2;
-	  this.pageHeigh = Math.floor(this.scrollHeight/this.lineHeight) * this.lineHeight;
-  },
-  async loadBook() {
-	  try {
-		  const version = await chapterManager.checkVersion(this.name);
-		  if (version === 'old') {
-			  await chapterManager.handleOldVersion(this.name);
-			  return;
-		  }
-		  if (version === 'none') {
-			  this.page1 = { text: "本书没有内容", offset: 0, length: 0 };
-			  return;
-		  }
-		  this.totalChapters = await chapterManager.getTotalChapters(this.name);
-	  } catch (e) {
-		  prompt.showToast({ message: '章节列表加载失败' });
-		  this.totalChapters = 0;
-		  return;
-	  }
->>>>>>> 74e43730c4ae86c9ae9596cf5b5f0bd18fd85aa8
 
 		if (this.totalChapters === 0) {
 			this.page1 = { text: "本书没有内容", offset: 0, length: 0 };
