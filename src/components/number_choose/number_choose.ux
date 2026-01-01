@@ -1,44 +1,63 @@
 <template>
-    <div class="number_choose" style="{{style}}">
-        <img static onclick="add" onlongpress="addL" ontouchend="end" src="/common/images/plus.png" class="img" style="top: 0px;" />
-        <text>{{ value + unit }}</text>
-        <img static onclick="minus" onlongpress="minusL" ontouchend="end" src="/common/images/minis.png" class="img" style="bottom: 0px;" />
+    <div show="{{display}}" class="number_choose" style="{{style}}">
+        <text class="name-text">{{ name }}</text>
+        
+        <div class="control-container">
+            <div class="btn-wrapper" @click="minus" @longpress="minusL" @touchend="end">
+                <img class="btn-icon" src="/common/images/minis.png" />
+            </div>
+            
+            <div class="value-container">
+                <text class="value-text">{{ value }}</text>
+                <text class="unit-text">{{ unit }}</text>
+            </div>
+            
+            <div class="btn-wrapper" @click="add" @longpress="addL" @touchend="end">
+                <img class="btn-icon" src="/common/images/plus.png" />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-let interval=null;
-export default {
-	props: {
-		max: {
-			default: 100,
-		},
-		min: {
-			default: 0,
-		},
-		step: {
-			default: 1,
-		},
-		value: {
-			default: 0,
-		},
-		unit: {
-			// 单位
-			type: String,
-			default: "",
-        }, style: {
-            default: "",
-        }
-    },
+let interval = null;
 
-    add(){
+export default {
+    props: {
+        max: {
+            default: 100,
+        },
+        min: {
+            default: 0,
+        },
+        step: {
+            default: 1,
+        },
+        value: {
+            default: 0,
+        },
+        name: {
+            default: "名称",
+        },
+        unit: {
+            type: String,
+            default: "",
+        },
+        style: {
+            default: "",
+        },
+        display: {
+            default: true,
+        },
+    },
+    add() {
         const currentValue = parseFloat(this.value);
         const step = parseFloat(this.step);
         if (currentValue < this.max) {
             this.$emit("change", { value: currentValue + step });
         }
     },
-    minus(){
+    minus() {
         const currentValue = parseFloat(this.value);
         const step = parseFloat(this.step);
         if (currentValue > this.min) {
@@ -47,36 +66,80 @@ export default {
     },
     addL() {
         this.end();
-        interval = setInterval(()=>{this.add()}, 50);
+        interval = setInterval(() => { this.add(); }, 50);
     },
     minusL() {
         this.end();
-        interval = setInterval(()=>{this.minus()}, 50);
+        interval = setInterval(() => { this.minus(); }, 50);
     },
-    end(){
+    end() {
         clearInterval(interval);
+    },
+    onDestroy() {
+        this.end();
     }
 };
 </script>
 
 <style>
 .number_choose {
-	width: 100%;
-	height: 218px;
-}
-.img {
-	position: absolute;
-	left: 60px;
-	width: 70px;
-	height: 70px;
-}
-text{
     width: 100%;
-    height: 66px;
-    top:76px;
-    text-align: center;
-    font-size: 50px;
-    color:white;
+    height: 120px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+
+.name-text {
+    font-size: 20px;
     font-weight: bold;
+    color: white;
+    text-align: center;
+    width: 100%;
+    height: 24px;
+}
+
+.control-container {
+    width: 100%;
+    height: 82px;
+    padding: 0px 14px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    background-color: #262626;
+    justify-content: center;
+    align-items: center;
+}
+.btn-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.value-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+}
+
+.value-text {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    line-height: 36px;
+}
+
+.unit-text {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 20px;
+    margin-top: 2px;
 }
 </style>

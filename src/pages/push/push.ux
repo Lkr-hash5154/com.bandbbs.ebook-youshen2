@@ -30,33 +30,16 @@
           <text if="{{state2 == 'succ'}}" style="width: 192px;font-size: 28px;font-weight:bold;color: white;text-align: center;margin-bottom:36px;">
             同步成功
           </text>
-          <!-- <text style="width: 192px;font-size: 20px;font-weight:bold;color: rgb(153, 153, 153);text-align: center;margin-top: 25px;padding: 10px;">
-              当前任务
-          </text> -->
           <div class="item">
             <text class="itemtext" style="color:rgb(168, 168, 168)">书籍 {{persent}}%</text>
           </div>
       </div>
-
-      <!-- <img static src="/common/images/push.png" @click="next" style="position: absolute;left: 158px;top: 6px;width: 48px;height: 48px;"/> -->
       <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
         {{nowTime}}
       </text>
       <text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
         书籍同步
       </text>
-<!-- 	<div style="width: 192px;padding-left: 15px;padding-right: 15px;padding-top: 19px;
-		position: absolute;top: 0px;left: 0px;flex-direction: column;">
-		<text style="font-size: 18px;font-weight:bold;line-height: 40px;color: white;width: 226px;text-align: center;">
-			{{msg}}
-		</text>
-        <text style="font-size: 18px;font-weight:bold;line-height: 40px;color: white;width: 226px;text-align: center;">
-        	{{filePath}},{{fileName}}
-        </text>
-        <text style="font-size: 18px;font-weight:bold;line-height: 40px;color: white;width: 226px;text-align: center;">
-        	{{cData}}
-        </text>
-	</div> -->
   </div>	
 </template>
 
@@ -67,8 +50,6 @@ import router from '@system.router'
 import brightness from "@system.brightness"
 
 export default {
-	// ÷﹢‐+-＋－×÷％
-  // 页面级组件的数据模型，影响传入数据的覆盖机制：private内定义的属性不允许被覆盖
   private: {
       fileName: '',
       persent: 0,
@@ -82,7 +63,6 @@ export default {
     let hours = date.getHours();
     let minutes = date.getMinutes();
 
-    // 格式化小时和分钟为两位数
     hours = hours < 10 ? '0' + hours : hours;
     minutes = minutes < 10 ? '0' + minutes : minutes;
 
@@ -126,32 +106,25 @@ export default {
   },
 
   onShow() {
-		brightness.setKeepScreenOn({
-			keepScreenOn: true,
-		});
-	},
-
-	onHide() {
-		brightness.setKeepScreenOn({
-			keepScreenOn: false,
-		});
-	},
-
-  next(){
-    if (this.state=="wait"){
-      this.state="ready"
-    }else if (this.state=="ready"){
-      this.state="upload"
-    }else if (this.state=="upload"){
-      this.state="wait"
-    }
-
+    brightness.setKeepScreenOn({
+      keepScreenOn: true,
+    });
   },
+
+  onHide() {
+    brightness.setKeepScreenOn({
+      keepScreenOn: false,
+    });
+  },
+
   back(){
-  	router.back();
+    router.back();
   },
   onDestroy() {
-    clearInterval(this.timer);
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
     globalThis.conn.removeEventListener(this.eventlistener)
   }
 }

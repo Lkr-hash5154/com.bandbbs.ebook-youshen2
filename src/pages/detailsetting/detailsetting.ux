@@ -21,6 +21,13 @@
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
+		  <list-item type="item" class="item" @click="routerTo('readPercent')">
+			<div class="item-content">
+				<marquee text-offset="25" scrollamount="20" class="itemtext" static>跳转百分比</marquee>
+				<marquee text-offset="25" scrollamount="20" class="itemtext2" static>按百分比跳转</marquee>
+			</div>
+			<img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
+		</list-item>
 		  <list-item class="item" @click="routerTo('bookmarks')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext">书签管理</text>
@@ -60,6 +67,14 @@
 				  <text class="itemtext">书籍详情</text>
 				  <marquee class="itemtext2" scrollamount="20" text-offset="25">封面、占用空间等</marquee>
 			  </div>
+			  <list-item class="item" @click="routerTo('readingTime')" type="item">
+				<div class="item-content">
+					<text class="itemtext">阅读时长</text>
+					<marquee class="itemtext2" scrollamount="20" text-offset="25">查看阅读时长统计</marquee>
+				</div>
+				<img src="/common/images/enter.png" style="width:32px;height: 32px;" static/>
+			</list-item>
+  
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;"/>
 		  </list-item>
 	  </list>
@@ -80,11 +95,8 @@
   import router from '@system.router'
   import prompt from '@system.prompt'
   import app from '@system.app'
-  import file from '@system.file'
-  import storage from '../../common/storage.js'
-  import bookStorage from '../../common/bookStorage.js'
-  import chapterManager from '../../common/chapterManager.js'
-  
+  import bookStorage from '../../utils/bookStorage.js'
+  import chapterManager from '../../utils/chapterManager.js'
   
   export default {
 	private: {
@@ -99,120 +111,56 @@
 	  const date = new Date();
 	  let hours = date.getHours();
 	  let minutes = date.getMinutes();
-  
 	  hours = hours < 10 ? '0' + hours : hours;
 	  minutes = minutes < 10 ? '0' + minutes : minutes;
-  
 	  this.nowTime = `${hours}:${minutes}`;
 	},
 	onInit() {
 	  this.updateTime();
-	  this.timer = setInterval(() => {
-		this.updateTime();
-	  }, 1000);
+	  this.timer = setInterval(() => { this.updateTime(); }, 1000);
+	},
+	onDestroy(){ if (this.timer) { clearInterval(this.timer); this.timer = null; } },
+	onShow(){
+		if (globalThis.justJumpedFromChapter || globalThis.justJumpedFromBookmark || globalThis.justJumpedFromPageNumber || globalThis.justJumpedFromPercent) { router.back(); return; }
+		if (typeof globalThis.isKeepScreenOn !== 'undefined') this.isKeepScreenOn = globalThis.isKeepScreenOn;
 	},
 	async addBookmark() {
 		try {
-			const progress = await bookStorage.get(this.name);
-			if (!progress.bookmarks) {
-				progress.bookmarks = [];
+			let progress = await bookStorage.get(this.name);
+			if (!progress || progress.chapterIndex === null) {
+				prompt.showToast({ message: '无法获取进度' });
+				return;
 			}
-
+			let bookmarks = await bookStorage.getBookmarks(this.name) || [];
 			const chapter = await chapterManager.getChapterByIndex(this.name, progress.chapterIndex);
 			if (!chapter) {
-				prompt.showToast({ message: '无法添加书签，章节信息错误' });
+				prompt.showToast({ message: '获取章节失败' });
 				return;
 			}
-	
 			const newBookmark = {
-				chapterIndex: progress.chapterIndex,
+				chapterIndex: chapter.index,
 				chapterName: chapter.name,
-				offsetInChapter: progress.offsetInChapter,
-				scrollOffset: progress.scrollOffset,
-				time: new Date().getTime(),
-				name: `书签${progress.bookmarks.length + 1}`
+				offsetInChapter: Math.max(0, Math.floor(progress.offsetInChapter || 0)),
+				scrollOffset: Math.max(0, Math.floor(progress.scrollOffset || 0)),
+				time: Date.now(),
+				name: `书签${bookmarks.length + 1}`
 			};
-	
-			const exists = progress.bookmarks.some(bm => bm.chapterIndex === newBookmark.chapterIndex && bm.offsetInChapter === newBookmark.offsetInChapter);
-			if (exists) {
-				prompt.showToast({ message: '书签已存在' });
-				return;
-			}
-	
-			progress.bookmarks.push(newBookmark);
-			progress.bookmarks.sort((a, b) => a.chapterIndex - b.chapterIndex || a.offsetInChapter - b.offsetInChapter);
-			
-			await bookStorage.set(this.name, progress);
+			bookmarks.push(newBookmark);
+			bookmarks.sort((a, b) => a.chapterIndex - b.chapterIndex || a.offsetInChapter - b.offsetInChapter);
+			await bookStorage.setBookmarks(this.name, bookmarks);
 			prompt.showToast({ message: '添加书签成功' });
 		} catch (e) {
-			prompt.showToast({ message: `添加书签失败: ${e}` });
+			prompt.showToast({ message: '添加失败' });
 		}
 	},
-	onDestroy(){
-		clearInterval(this.timer);
-	},
-	onReady(){
-	},
-	resetList(){
-  
-	},
-	onShow(){
-		if (typeof globalThis.isKeepScreenOn !== 'undefined') {
-			this.isKeepScreenOn = globalThis.isKeepScreenOn;
-		}
-	},
-	onBackPress(){
-	},
-	del(){
-		router.push({
-            uri: '/pages/confirm',
-            params: {
-                action: 'deleteBook',
-                title: '删除书籍',
-                confirmText: '确认删除吗？',
-                subText: '删除后不可恢复',
-                cPath: 'internal://files/books/' + this.name
-            }
-        });
-	},
-	selectFile(item){
-		router.push({
-		  uri: '/pages/detail',
-			params: { name: item.dirName }
-		})
-	},
-	routerTo(url) {
-	  router.push({
-		uri: '/pages/' + url,
-		params: { name: this.name }
-	  })
-	},
-	toggleKeepScreenOnClick() {
-		this.isKeepScreenOn = !this.isKeepScreenOn;
-		globalThis.isKeepScreenOn = this.isKeepScreenOn;
-	},
-	async backToFirst(){
-		try {
-			const progress = await bookStorage.get(this.name);
-			progress.offsetInChapter = 0;
-			progress.scrollOffset = 0;
-			await bookStorage.set(this.name, progress);
-			
-			prompt.showToast({ message: '已跳转到第一段', duration: 1500 });
-			globalThis.justJumpedFromPageNumber = true;
-			router.back();
-		} catch (e) {
-			prompt.showToast({ message: '跳转失败', duration: 2000 });
-		}
-	},
-	back(){
-		router.back();
-	},
-	exit(){
-		app.terminate();
-	}
+	del(){ router.push({ uri: '/pages/confirm', params: { action: 'deleteBook', title: '删除书籍', confirmText: '确认删除吗？', subText: '删除后不可恢复', cPath: 'internal://files/books/' + this.name } }); },
+	routerTo(url) { router.push({ uri: '/pages/' + url, params: { name: this.name } }) },
+	toggleKeepScreenOnClick() { this.isKeepScreenOn = !this.isKeepScreenOn; globalThis.isKeepScreenOn = this.isKeepScreenOn; },
+	async backToFirst(){ try { let progress = await bookStorage.get(this.name); if (progress.chapterIndex === null || progress.chapterIndex === undefined) { prompt.showToast({ message: '无法跳转，章节信息错误' }); return; } const currentChapterIndex = progress.chapterIndex; progress.offsetInChapter = 0; progress.scrollOffset = 0; await bookStorage.set(this.name, progress); progress = null; prompt.showToast({ message: '已跳转到第一段' }); globalThis.justJumpedFromPageNumber = true; globalThis.justJumpedChapterIndex = currentChapterIndex; router.back(); } catch (e) { } },
+	back(){ router.back(); }
   }
-  </script>
+</script>
+
   
   <style>
   .page {

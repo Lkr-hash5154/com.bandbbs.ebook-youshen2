@@ -11,73 +11,47 @@
     </div>
 </template>
 
+</template>
 <script>
-    import router from '@system.router';
-    import storage from '../../common/storage.js';
-
-    export default {
-        private: {
-            title: '',
-            content: '',
-            nowTime: "00:00",
-            timer: null,
-            fontSize: 26,
-            opacity: 100,
-            verticalMargin: 10,
-            lineHeight: 30
-        },
-        onInit() {
-            this.title = this.pageTitle || '详情';
-            this.content = this.pageContent || '无内容';
-            this.updateTime();
-            this.timer = setInterval(() => {
-                this.updateTime();
-            }, 1000);
-            this.loadSettings();
-        },
-        onDestroy() {
-            if (this.timer) {
-                clearInterval(this.timer);
-                this.timer = null;
-            }
-        },
-        updateTime() {
-            const date = new Date();
-            let hours = date.getHours();
-            let minutes = date.getMinutes();
-            hours = hours < 10 ? '0' + hours : hours;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            this.nowTime = `${hours}:${minutes}`;
-        },
-        loadSettings() {
-            storage.get({
-                key: 'EBOOK_FONT',
-                success: (data) => {
-                    if (data) {
-                        this.fontSize = parseInt(data);
-                    }
-                    this.lineHeight = parseInt((-0.01) * (this.fontSize ** 2) + 1.62 * this.fontSize - 3.23);
-                }
-            });
-            storage.get({
-                key: 'EBOOK_OPACITY',
-                success: (data) => {
-                    if (data) this.opacity = parseInt(data)
-                }
-            });
-            storage.get({
-                key: 'EBOOK_VERTICAL_MARGIN',
-                success: (data) => {
-                    if (data) {
-                        this.verticalMargin = parseInt(data);
-                    }
-                }
-            });
-        },
-        back() {
-            router.back();
-        }
-    }
+import router from '@system.router';
+import storage from '../../utils/storage.js';
+export default {
+  private: {
+    title: '',
+    content: '',
+    nowTime: "00:00",
+    timer: null,
+    fontSize: 24,
+    opacity: 100,
+    verticalMargin: 20,
+    lineHeight: 30,
+    detailMarqueeEnabled: false
+  },
+  onInit() {
+    this.title = this.pageTitle || '详情';
+    this.content = this.pageContent || '无内容';
+    this.updateTime();
+    this.timer = setInterval(() => { this.updateTime(); }, 1000);
+    this.loadSettings();
+  },
+  onShow() { this.loadSettings(); },
+  onDestroy() { if (this.timer) { clearInterval(this.timer); this.timer = null; } },
+  updateTime() {
+    const date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    this.nowTime = `${hours}:${minutes}`;
+  },
+  loadSettings() {
+    storage.get({ key: 'EBOOK_FONT', success: (data) => { if (data) this.fontSize = parseInt(data); this.lineHeight = parseInt((-0.01) * (this.fontSize ** 2) + 1.62 * this.fontSize - 3.23); } });
+    storage.get({ key: 'EBOOK_OPACITY', success: (data) => { if (data) this.opacity = parseInt(data) } });
+    storage.get({ key: 'EBOOK_VERTICAL_MARGIN', success: (data) => { if (data) this.verticalMargin = parseInt(data); } });
+    storage.get({ key: 'EBOOK_DETAIL_MARQUEE_ENABLED', success: (data) => { this.detailMarqueeEnabled = data === 'true'; } });
+  },
+  back() { router.back(); }
+}
 </script>
 
 <style>

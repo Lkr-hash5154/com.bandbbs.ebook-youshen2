@@ -38,84 +38,54 @@
 <script>
 import router from '@system.router'
 import prompt from '@system.prompt'
-import bookStorage from '../../common/bookStorage.js'
-
+import bookStorage from '../../utils/bookStorage.js'
 export default {
-    private: {
-        textValue: "",
-        hideKeyboard: true,
-        nowTime: "00:00",
-        timer: null
-    },
-    protected: {
-        bookName: '',
-        bookmarkIndex: -1,
-        currentName: ''
-    },
-    updateTime() {
-      const date = new Date();
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-  
-      hours = hours < 10 ? '0' + hours : hours;
-      minutes = minutes < 10 ? '0' + minutes : minutes;
-  
-      this.nowTime = `${hours}:${minutes}`;
-    },
-    onInit() {
-        this.textValue = this.currentName || '';
-        this.updateTime();
-        this.timer = setInterval(() => {
-            this.updateTime();
-        }, 1000);
-    },
-    onDestroy(){
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
-    },
-    onInput(evt) {
-        if (this.textValue.length < 20) {
-            this.textValue += evt.detail.content;
-        }
-    },
-    onDelete() {
-        this.textValue = this.textValue.slice(0, -1);
-    },
-    onVisibilityChange(evt) {
-        if (!evt.detail.visible) {
-            this.hideKeyboard = true;
-        }
-    },
-    toggleKeyboard() {
-        this.hideKeyboard = !this.hideKeyboard;
-    },
-    back() {
+  private: {
+    textValue: "",
+    hideKeyboard: true,
+    nowTime: "00:00",
+    timer: null
+  },
+  protected: {
+    bookName: '',
+    bookmarkIndex: -1,
+    currentName: ''
+  },
+  updateTime() {
+    const date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    this.nowTime = `${hours}:${minutes}`;
+  },
+  onInit() {
+    this.textValue = this.currentName || '';
+    this.updateTime();
+    this.timer = setInterval(() => { this.updateTime(); }, 1000);
+  },
+  onDestroy() { if (this.timer) { clearInterval(this.timer); this.timer = null; } },
+  onInput(evt) { if (this.textValue.length < 20) { this.textValue += evt.detail.content; } },
+  onDelete() { this.textValue = this.textValue.slice(0, -1); },
+  onVisibilityChange(evt) { if (!evt.detail.visible) { this.hideKeyboard = true; } },
+  toggleKeyboard() { this.hideKeyboard = !this.hideKeyboard; },
+  back() { router.back(); },
+  async save() {
+    if (!this.textValue) { prompt.showToast({ message: '名称不能为空' }); return; }
+    try {
+      let bookmarks = await bookStorage.getBookmarks(this.bookName);
+      if (bookmarks && bookmarks[this.bookmarkIndex]) {
+        bookmarks[this.bookmarkIndex].name = this.textValue;
+        await bookStorage.setBookmarks(this.bookName, bookmarks);
+        bookmarks = null;
+        prompt.showToast({ message: '保存成功' });
         router.back();
-    },
-    async save() {
-        if (!this.textValue) {
-            prompt.showToast({ message: '名称不能为空' });
-            return;
-        }
-
-        try {
-            let progress = await bookStorage.get(this.bookName);
-            if (progress.bookmarks && progress.bookmarks[this.bookmarkIndex]) {
-                progress.bookmarks[this.bookmarkIndex].name = this.textValue;
-                await bookStorage.set(this.bookName, progress);
-                progress = null;
-                prompt.showToast({ message: '保存成功' });
-                router.back();
-            } else {
-                progress = null;
-                prompt.showToast({ message: '找不到书签' });
-            }
-        } catch (e) {
-            prompt.showToast({ message: '保存失败' });
-        }
-    }
+      } else {
+        bookmarks = null;
+        prompt.showToast({ message: '找不到书签' });
+      }
+    } catch (e) { prompt.showToast({ message: '保存失败' }); }
+  }
 }
 </script>
 

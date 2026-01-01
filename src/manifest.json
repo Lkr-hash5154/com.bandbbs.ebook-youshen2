@@ -48,6 +48,9 @@
     },
     {
       "name": "system.vibrator"
+    },
+    {
+      "name": "system.battery"
     }
   ],
   "config": {
@@ -70,6 +73,9 @@
       "pages/readPresent": {
         "component": "readPresent"
       },
+      "pages/readPercent": {
+        "component": "readPercent"
+      },
       "pages/autoRead": {
         "component": "autoRead"
       },
@@ -88,26 +94,17 @@
       "pages/marginSetting": {
         "component": "marginSetting"
       },
+      "pages/chapterSwitchSensitivity": {
+        "component": "chapterSwitchSensitivity"
+      },
       "pages/push": {
         "component": "push"
-      },
-      "pages/info": {
-        "component": "info"
       },
       "pages/swipe": {
         "component": "swipe"
       },
-      "pages/chapterSwitchSensitivity": {
-        "component": "chapterSwitchSensitivity"
-      },
-      "pages/gestureSetting": {
-        "component": "gestureSetting"
-      },
       "pages/bookmarks": {
         "component": "bookmarks"
-      },
-      "pages/editBookmark": {
-        "component": "editBookmark"
       },
       "pages/pageSizeSetting": {
         "component": "pageSizeSetting"
@@ -118,6 +115,9 @@
       "pages/confirm": {
         "component": "confirm"
       },
+      "pages/editBookmark": {
+        "component": "editBookmark"
+      },
       "pages/help": {
         "component": "help"
       },
@@ -126,15 +126,6 @@
       },
       "pages/list": {
         "component": "list"
-      },
-      "pages/teacherScreen": {
-        "component": "teacherScreen"
-      },
-      "pages/shelfStyle": {
-        "component": "shelfStyle"
-      },
-      "pages/alwaysShowTimeSensitivitySetting": {
-        "component": "alwaysShowTimeSensitivitySetting"
       },
       "pages/textReader": {
         "component": "textReader"
@@ -148,20 +139,8 @@
       "pages/swipeSensitivity": {
         "component": "swipeSensitivity"
       },
-      "pages/tutorial": {
-        "component": "tutorial"
-      },
-      "pages/shelfPageSizeSetting": {
-        "component": "shelfPageSizeSetting"
-      },
       "pages/autoReadDistanceSetting": {
         "component": "autoReadDistanceSetting"
-      },
-      "pages/timeFormatSetting": {
-        "component": "timeFormatSetting"
-      },
-      "pages/preventParagraphSplittingSetting": {
-        "component": "preventParagraphSplittingSetting"
       },
       "pages/readingSetting": {
         "component": "readingSetting"
@@ -174,21 +153,24 @@
       },
       "pages/performanceSetting": {
         "component": "performanceSetting"
-    },
+      },
       "pages/progressSavingSetting": {
         "component": "progressSavingSetting"
       },
       "pages/timeSetting": {
         "component": "timeSetting"
       },
-      "pages/preloadChapterSetting": {
-        "component": "preloadChapterSetting"
+      "pages/marqueeSetting": {
+        "component": "marqueeSetting"
       },
-      "pages/lastReadSetting": {
-        "component": "lastReadSetting"
+      "pages/readModeSetting": {
+        "component": "readModeSetting"
       },
-      "pages/checkCoverSetting": {
-        "component": "checkCoverSetting"
+      "pages/readingTime": {
+        "component": "readingTime"
+      },
+      "pages/storageManagement": {
+        "component": "storageManagement"
       }
   },
   "display": {

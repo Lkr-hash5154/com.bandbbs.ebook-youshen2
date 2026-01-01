@@ -1,0 +1,267 @@
+<template>
+	<div class="page" style="flex-direction: column;">
+
+	  <list class="list">
+		<list-item class="item {{readMode === 'scroll' ? 'item2' : ''}}" @click="select('scroll')" type="item">
+			<div class="item-content">
+				<text class="itemtext" static>滚动模式</text>
+				<text class="itemtext2" static>标准滚动阅读</text>
+			</div>
+			<img src="/common/images/check.png" style="width:32px;height: 32px;" if="{{readMode === 'scroll'}}"/>
+		</list-item>
+		  <list-item class="item {{readMode === 'nostalgic' ? 'item2' : ''}}" @click="select('nostalgic')" type="item">
+			<div class="item-content">
+				<text class="itemtext" static>怀旧模式</text>
+				<text class="itemtext2" static>一屏一页字</text>
+			</div>
+			  <img src="/common/images/check.png" style="width:32px;height: 32px;" if="{{readMode === 'nostalgic'}}"/>
+		  </list-item>
+
+		  <list-item if="{{readMode === 'nostalgic'}}" class="item" style="padding: 7px 16px; height: 50px;" type="tip">
+			  <text class="section-title" static>翻页方式</text>
+		  </list-item>
+		  <list-item if="{{readMode === 'nostalgic'}}" class="item {{nostalgicPageTurnMode === 'swipe' ? 'item2' : ''}}" @click="selectPageTurnMode('swipe')" type="item">
+			  <div class="item-content">
+				  <text class="itemtext" static>左右滑动</text>
+				  <text class="itemtext2" static>左右滑动翻页</text>
+			  </div>
+			  <img src="/common/images/check.png" style="width:32px;height: 32px;" if="{{nostalgicPageTurnMode === 'swipe'}}"/>
+		  </list-item>
+		  <list-item if="{{readMode === 'nostalgic'}}" class="item {{nostalgicPageTurnMode === 'sideClick' ? 'item2' : ''}}" @click="selectPageTurnMode('sideClick')" type="item">
+			  <div class="item-content">
+				  <text class="itemtext" static>两侧点击</text>
+				  <text class="itemtext2" static>点击两侧翻页</text>
+			  </div>
+			  <img src="/common/images/check.png" style="width:32px;height: 32px;" if="{{nostalgicPageTurnMode === 'sideClick'}}"/>
+		  </list-item>
+		  <list-item if="{{readMode === 'nostalgic'}}" class="item {{nostalgicPageTurnMode === 'topBottomClick' ? 'item2' : ''}}" @click="selectPageTurnMode('topBottomClick')" type="item">
+			  <div class="item-content">
+				  <text class="itemtext" static>上下点击</text>
+				  <text class="itemtext2" static>点击上下翻页</text>
+			  </div>
+			  <img src="/common/images/check.png" style="width:32px;height: 32px;" if="{{nostalgicPageTurnMode === 'topBottomClick'}}"/>
+		  </list-item>
+
+	  </list>
+	  
+	  <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 212px;height: 82px;" />
+	  <text style="position: absolute;top:-100px;left:0px;">{{txtNum}}</text>
+
+	  <text style="position: absolute;top: 22px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
+		{{nowTime}}
+	  </text>
+	  <text static style="position: absolute;top: 42px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
+			阅读模式
+		</text>
+	</div>
+  </template>
+
+  <script>
+  import router from '@system.router'
+  import storage from '../../utils/storage.js'
+  import app from '@system.app'
+
+  export default {
+	private: {
+		readMode: 'scroll',
+		nostalgicPageTurnMode: 'topBottomClick',
+		txtNum:0,
+		nowTime: "00:00",
+		timer: null
+	},
+	protected: {
+	  cPath: '',
+		name: ''
+	},
+	updateTime() {
+		const date = new Date();
+		let hours = date.getHours();
+		let minutes = date.getMinutes();
+
+		hours = hours < 10 ? '0' + hours : hours;
+		minutes = minutes < 10 ? '0' + minutes : minutes;
+
+		this.nowTime = `${hours}:${minutes}`;
+	},
+	onInit() {
+		this.updateTime();
+		this.timer = setInterval(() => {
+			this.updateTime();
+		}, 1000);
+	},
+	onDestroy(){
+		if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+	},
+	onReady(){
+	},
+	resetList(){
+
+	},
+	onShow(){
+	  var that = this;
+	  storage.get({
+		  key: 'EBOOK_READ_MODE',
+		  success: function(data) {
+			if (data) {
+				that.readMode = data;
+			} else {
+				that.readMode = 'scroll';
+			}
+			if (that.readMode === 'nostalgic') {
+				storage.get({
+					key: 'EBOOK_NOSTALGIC_PAGE_TURN_MODE',
+					success: function(modeData) {
+						if (modeData) {
+							that.nostalgicPageTurnMode = modeData;
+						} else {
+							that.nostalgicPageTurnMode = 'topBottomClick';
+						}
+						that.updateScene();
+					},
+					fail: function() {
+						that.nostalgicPageTurnMode = 'topBottomClick';
+						that.updateScene();
+					}
+				});
+			} else {
+				that.updateScene();
+			}
+		  },
+		  fail: function(data, code) {
+			that.readMode = 'scroll';
+			that.updateScene();
+		  }
+	  })
+	},
+	onBackPress(){
+	},
+
+	select(mode){
+	  if (this.readMode === mode) {
+		  return;
+	  }
+	  this.readMode = mode;
+	  storage.set({
+		  key: 'EBOOK_READ_MODE',
+		  value: mode,
+	  });
+	  if (mode === 'nostalgic') {
+		  storage.get({
+			  key: 'EBOOK_NOSTALGIC_PAGE_TURN_MODE',
+			  success: (modeData) => {
+				  if (modeData) {
+					  this.nostalgicPageTurnMode = modeData;
+				  } else {
+					  this.nostalgicPageTurnMode = 'topBottomClick';
+				  }
+				  this.updateScene();
+			  },
+			  fail: () => {
+				  this.nostalgicPageTurnMode = 'topBottomClick';
+				  this.updateScene();
+			  }
+		  });
+	  } else {
+		  this.updateScene();
+	  }
+	},
+	selectPageTurnMode(mode) {
+	  if (this.nostalgicPageTurnMode === mode) {
+		  return;
+	  }
+	  this.nostalgicPageTurnMode = mode;
+	  storage.set({
+		  key: 'EBOOK_NOSTALGIC_PAGE_TURN_MODE',
+		  value: mode,
+	  });
+	  this.updateScene();
+	},
+
+	selectFile(item){
+		router.push({
+		  uri: '/pages/detail'
+		})
+	},
+	routerTo(url) {
+	  router.push({
+		uri: '/pages/' + url
+	  })
+	},
+	back(){
+		router.back();
+	},
+	exit(){
+		app.terminate();
+	},
+	updateScene(){
+		this.txtNum += 1;
+	}
+  }
+  </script>
+
+<style>
+.page {
+	width: 192px;
+	height: 490px;
+	background-color: #000000;
+}
+
+.list {
+	width: 192px;
+	height: 490px;
+	position: absolute;
+	top:0px;
+	left:0px;
+	padding: 86px 12px;
+}
+
+.item2 {
+  background-color: #0D6EFF !important;
+}
+
+.item {
+	  width: 100%;
+	  height: 85px;
+	  padding: 12px 18px;
+	  margin-bottom: 8px;
+	  background-color: #262626;
+	  border-radius: 26px;
+	  align-items: center;
+	justify-content: space-between;
+  }
+  
+  .itemtext {
+	  font-size: 23px;
+	  width: 100%;
+	  font-weight: bold;
+	  color: white;
+	  text-overflow: ellipsis;
+	  lines: 1;
+  }
+  
+  .itemtext2 {
+	  font-size: 20px;
+	  font-weight: bold;
+	  color: rgba(255,255,255,0.6);
+	  text-overflow: ellipsis;
+	  lines: 1;
+  }
+
+
+.item-content {
+  height: 100%;
+  flex:1;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.section-title {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.5);
+}
+</style>

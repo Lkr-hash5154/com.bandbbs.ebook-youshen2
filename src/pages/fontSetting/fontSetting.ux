@@ -7,8 +7,6 @@
 			</text>
 		</div>
 		<number style="position: absolute;bottom:6px" max="40" min="16" step="1" value="{{fontSize}}" @change="change" name="当前字号"></number>
-
-		<img static src="/common/images/reset.png" @click="reset" style="position: absolute;left: 140px;bottom: 160px;width: 48px;height: 48px;"/>
 		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
 		  {{nowTime}}
 		</text>

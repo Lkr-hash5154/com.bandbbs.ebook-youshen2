@@ -37,17 +37,24 @@
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
 		  </list-item>
-		  <list-item class="item" @click="routerTo('tutorial')" type="item">
+		<list-item class="item" @click="routerTo('storageManagement')" type="item">
 			  <div class="item-content">
-				  <text class="itemtext" static>教程中心</text>
-				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>查看应用使用教程</marquee>
-			  </div>
-			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
-		  </list-item>
+			  <text class="itemtext" static>存储管理</text>
+	 			<marquee class="itemtext2" scrollamount="20" text-offset="25" static>管理存储空间</marquee>
+			</div>
+			<img src="/common/images/enter.png" style="width:32px;height: 32px;" static/>
+		</list-item>
 		  <list-item class="item" @click="routerTo('push')" type="item">
 			  <div class="item-content">
 				  <text class="itemtext" static>书籍同步</text>
 				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>连接手机同步内容</marquee>
+			  </div>
+			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
+		  </list-item>
+		  <list-item class="item" @click="routerTo('readingTime')" type="item">
+			  <div class="item-content">
+				  <text class="itemtext" static>阅读时长</text>
+				  <marquee class="itemtext2" scrollamount="20" text-offset="25" static>全局阅读时长</marquee>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:40px;height: 40px;" static />
 		  </list-item>
@@ -69,18 +76,18 @@
 	</div>
 	</template>	
   
-  <script>
+    <script>
   import router from '@system.router'
   import prompt from '@system.prompt'
   import app from '@system.app'
-  import file from '@system.file'
-  import storage from '../../common/storage.js'
+  import storage from '../../utils/storage.js'
   
   
   export default {
 	private: {
 	  nowTime: "00:00",
 	  timer: null,
+	  showProgressBar: true,
 	  chapterSwitchStyle: 'button',
     timeFormat: '24h'
 	},
@@ -124,15 +131,15 @@
 	  }, 1000);
 	},
 	loadSettings() {
-		storage.get({ key: 'EBOOK_CHAPTER_SWITCH_STYLE', success: (data) => { 
-			if (data) this.chapterSwitchStyle = data;
-		}});
     storage.get({ key: 'EBOOK_TIME_FORMAT', success: (data) => {
         if (data) this.timeFormat = data;
     }});
 	},
 	onDestroy(){
-		clearInterval(this.timer);
+		if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
 	},
 	onReady(){
 	},
@@ -144,12 +151,10 @@
 	},
 	clearBooks(){
 	  router.push({
-            uri: '/pages/confirm',
+            uri: '/pages/help',
             params: {
-                action: 'clearBookshelf',
                 title: '清空数据',
-                confirmText: '确认清空数据？',
-                subText: '所有书籍和阅读进度都将被删除'
+                content: '为防止卡死，请手动将小程序卸载后重新安装。'
             }
         });
 	},
@@ -170,7 +175,7 @@
 	},
 	exit(){
 		app.terminate();
-	}
+	},
   }
   </script>
   

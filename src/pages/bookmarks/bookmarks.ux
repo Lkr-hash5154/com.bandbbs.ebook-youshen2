@@ -37,10 +37,9 @@
 <script>
 import router from '@system.router'
 import prompt from '@system.prompt'
-import bookStorage from '../../common/bookStorage.js'
-
+import bookStorage from '../../utils/bookStorage.js'
+import storage from '../../utils/storage.js'
 const PAGE_SIZE = 8;
-
 export default {
   private: {
     allBookmarks: [],
@@ -49,11 +48,11 @@ export default {
     totalPages: 1,
     nowTime: "00:00",
     timer: null,
-    isNavigating: false
+    isNavigating: false,
+    bookmarkMarqueeEnabled: false,
+	  readMode: 'scroll'
   },
-  protected: {
-    name: ''
-  },
+  protected: { name: '' },
   updateTime() {
     const date = new Date();
     let hours = date.getHours();
@@ -64,20 +63,21 @@ export default {
   },
   onInit() {
     this.updateTime();
-    this.timer = setInterval(() => {
-      this.updateTime();
-    }, 1000);
+    this.timer = setInterval(() => { this.updateTime(); }, 1000);
   },
-  onShow() {
+  async onShow() {
     this.isNavigating = false;
-    this.loadBookmarks();
+    storage.get({ key: 'EBOOK_BOOKMARK_MARQUEE_ENABLED', success: (data) => { this.bookmarkMarqueeEnabled = data === 'true'; } });
+	storage.get({ key: 'EBOOK_READ_MODE', success: (data) => { if (data) this.readMode = data; }});
+    await this.loadBookmarks();
   },
   onDestroy() {
-    clearInterval(this.timer);
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    this.allBookmarks = null; this.visibleBookmarks = null;
+    global.runGC();
   },
   async loadBookmarks() {
-    const progress = await bookStorage.get(this.name);
-    this.allBookmarks = progress.bookmarks || [];
+    this.allBookmarks = await bookStorage.getBookmarks(this.name);
     this.totalPages = Math.ceil(this.allBookmarks.length / PAGE_SIZE) || 1;
     this.currentPage = 0;
     this.updateVisibleBookmarks();
@@ -87,60 +87,32 @@ export default {
     const end = start + PAGE_SIZE;
     this.visibleBookmarks = this.allBookmarks.slice(start, end);
   },
-  prevPage() {
-    if (this.currentPage > 0) {
-        this.currentPage--;
-        this.updateVisibleBookmarks();
-    }
-  },
-  nextPage() {
-    if (this.currentPage < this.totalPages - 1) {
-        this.currentPage++;
-        this.updateVisibleBookmarks();
-    }
-  },
+  prevPage() { if (this.currentPage > 0) { this.currentPage--; this.updateVisibleBookmarks(); } },
+  nextPage() { if (this.currentPage < this.totalPages - 1) { this.currentPage++; this.updateVisibleBookmarks(); } },
   async jumpTo(index) {
     if (this.isNavigating) return;
+    if (this.readMode === 'nostalgic') { router.push({ uri: '/pages/help', params: { title: '怀旧模式', content: '怀旧模式下无法正常使用书签跳转功能。' } }); return; }
     this.isNavigating = true;
-
     const realIndex = this.currentPage * PAGE_SIZE + index;
     const bookmark = this.allBookmarks[realIndex];
-    const progress = await bookStorage.get(this.name);
-
-    progress.chapterIndex = bookmark.chapterIndex;
-    progress.offsetInChapter = bookmark.offsetInChapter;
-    progress.scrollOffset = bookmark.scrollOffset;
-
+    if (!bookmark) { prompt.showToast({ message: '书签不存在' }); this.isNavigating = false; return; }
+    const progressData = {
+        chapterIndex: bookmark.chapterIndex !== undefined && bookmark.chapterIndex !== null ? parseInt(bookmark.chapterIndex) : null,
+        offsetInChapter: typeof bookmark.offsetInChapter === 'number' ? Math.max(0, Math.floor(bookmark.offsetInChapter)) : 0,
+        scrollOffset: typeof bookmark.scrollOffset === 'number' ? Math.max(0, Math.floor(bookmark.scrollOffset)) : 0
+    };
     try {
-      await bookStorage.set(this.name, progress);
-      prompt.showToast({ message: '正在跳转...', duration: 500 });
-      globalThis.justJumpedFromBookmark = true;
+      await bookStorage.set(this.name, progressData);
+      prompt.showToast({ message: '正在跳转...' });
+      globalThis.justJumpedFromBookmark = true; globalThis.justJumpedBookmarkChapterIndex = progressData.chapterIndex;
       router.back();
-    } catch (e) {
-      prompt.showToast({ message: '跳转失败', duration: 2000 });
-      this.isNavigating = false;
-    }
+    } catch (e) { prompt.showToast({ message: '跳转失败' }); this.isNavigating = false; }
   },
   deleteBookmark(index) {
     const realIndex = this.currentPage * PAGE_SIZE + index;
-    router.push({
-        uri: '/pages/confirm',
-        params: {
-            action: 'deleteBookmark',
-            title: '删除书签',
-            confirmText: `确认删除此书签吗？`,
-            subText: '此操作不可恢复',
-            bookName: this.name,
-            bookmarkIndex: realIndex
-        }
-    });
+    router.push({ uri: '/pages/confirm', params: { action: 'deleteBookmark', title: '删除书签', confirmText: `确认删除此书签吗？`, subText: '此操作不可恢复', bookName: this.name, bookmarkIndex: realIndex } });
   },
-  formatBookmarkLocation(bookmark) {
-    if (bookmark && bookmark.chapterName) {
-        return bookmark.chapterName;
-    }
-    return '未知章节';
-  },
+  formatBookmarkLocation(bookmark) { return bookmark && bookmark.chapterName ? bookmark.chapterName : '未知章节'; },
   formatTime(timestamp) {
     if (!timestamp) return '';
     const date = new Date(timestamp);
@@ -150,30 +122,13 @@ export default {
     const minutes = ('0' + date.getMinutes()).slice(-2);
     return `${month}-${day} ${hours}:${minutes}`;
   },
-  showBookmarkHelp() {
-      router.push({
-          uri: '/pages/help',
-          params: {
-              title: '书签帮助',
-              content: '长按书签可修改书签名称。\n长按阅读页的书签按钮可快速进入书签管理页面。'
-          }
-      });
-  },
+  showBookmarkHelp() { router.push({ uri: '/pages/help', params: { title: '书签帮助', content: '点击左侧编辑书签名称。' } }); },
   editBookmark(index) {
       const realIndex = this.currentPage * PAGE_SIZE + index;
       const bookmark = this.allBookmarks[realIndex];
-      router.push({
-          uri: '/pages/editBookmark',
-          params: {
-              bookName: this.name,
-              bookmarkIndex: realIndex,
-              currentName: bookmark.name
-          }
-      });
+      router.push({ uri: '/pages/editBookmark', params: { bookName: this.name, bookmarkIndex: realIndex, currentName: bookmark.name } });
   },
-  back() {
-    router.back();
-  }
+  back() { router.back(); }
 }
 </script>
 

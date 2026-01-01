@@ -1,53 +1,83 @@
 <template>
-	<div class="page" style="flex-direction: column;">
-
-	  <img if="{{allBooks.length == 0}}" src="/common/images/empty.png"
-		  style="position: absolute;left: 32px;top: 146px;width: 128px;height: 128px;" />
-
-	  <text if="{{allBooks.length == 0}}" style="position: absolute;left: 0px;top: 298px;width: 192px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">书架空空</text>
-
-      <list class="list" if="{{shelfStyle === 'list'}}">
-		  <list-item for="{{visibleBooks}}" class="item" @click="selectFile($item)" type="nook">
-        <div class = "cover-content">
-			  <marquee scrollamount="22" class="itemtext" text-offset="25">{{$item.name}}</marquee>
-			  <marquee scrollamount="40" class="itemtext2" text-offset="25">{{roundToDecimal((($item.lastReadChapterIndex + 1) / $item.chapterCount) * 100, 2) || 0}}% · 看到 {{$item.lastReadChapterIndex + 1}} / {{$item.chapterCount}} 章</marquee>
+  <div class="page" style="flex-direction: column;">
+    <img if="{{allBooks.length == 0}}" static src="/common/images/empty.png" style="position: absolute;left: 32px;top: 181px;width: 128px;height: 128px;" />
+    <text if="{{allBooks.length == 0}}" static style="position: absolute;left: 0px;top: 309px;width: 192px;line-height: 42px;font-weight:bold;font-size:22px;color:white;text-align:center;">书架空空</text>
+    <list class="list" if="{{shelfStyle === 'list' && displayMode === 'all'}}">
+      <list-item type="tip" if="{{showStorageWarning}}" class="item" style="background-color: #ad0000;">
+        <text style="color: white;font-size: 21px;">实际可用存储空间不足，将无法正常使用。</text>
+      </list-item>
+      <list-item for="{{visibleBooks}}" class="item" @click="selectFile($item)" type="nook">
+        <marquee if="{{shelfMarqueeEnabled}}" scrollamount="22" class="itemtext" text-offset="25">{{$item.name}}</marquee>
+        <text else class="itemtext">{{$item.name}}</text>
+        <marquee if="{{shelfMarqueeEnabled}}" scrollamount="40" text-offset="25" class="itemtext2">{{getProgressSubtitle($item)}}</marquee>
+        <text else class="itemtext2">{{getProgressSubtitle($item)}}</text>
+      </list-item>
+      <list-item type="pagination" class="pagination-container" if="{{totalPages > 1}}">
+        <div class="pagination-controls">
+          <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button" />
+          <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
+          <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button" />
         </div>
-		  </list-item>
-          <list-item type="pagination" class="pagination-container" if="{{totalPages > 1}}">
-            <div class="pagination-controls">
-              <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button"/>
-              <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
-              <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button"/>
-            </div>
-          </list-item>
-	  </list>
-
-      <list class="list" if="{{shelfStyle === 'cover'}}">
-          <list-item for="{{visibleBooks}}" class="item cover-item" @click="selectFile($item)" type="nook">
-            <img if="{{$item.hasRealCover}}" class="cover-image" src="internal://files/books/{{$item.dirName}}/cover.jpg" />
-            <div class="cover-content">
-              <marquee scrollamount="30" class="itemtext" text-offset="25">{{$item.name}}</marquee>
-              <marquee scrollamount="40" class="itemtext2" text-offset="25">{{roundToDecimal((($item.lastReadChapterIndex + 1) / $item.chapterCount) * 100, 2) || 0}}% · 看到 {{$item.lastReadChapterIndex + 1}} / {{$item.chapterCount}} 章</marquee>
-            </div>
-          </list-item>
-          <list-item type="pagination" class="pagination-container" if="{{totalPages > 1}}">
-            <div class="pagination-controls">
-              <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button"/>
-              <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
-              <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button"/>
-            </div>
-          </list-item>
-      </list>
-
-    <img static src="/common/images/more.png" @click="routerTo('more')" style="position: absolute;bottom: 6px;left:60px;width: 72px;height: 72px;"/>
-    <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+      </list-item>
+    </list>
+    <list class="list" if="{{shelfStyle === 'cover' && displayMode === 'all'}}">
+      <list-item type="tip" if="{{showStorageWarning}}" class="item" style="background-color: #ad0000;">
+        <text style="color: white;font-size: 21px;">实际可用存储空间不足，将无法正常使用。</text>
+      </list-item>
+      <list-item for="{{visibleBooks}}" class="item cover-item" @click="selectFile($item)" type="nook">
+        <img if="{{$item.hasRealCover}}" class="cover-image" src="internal://files/books/{{$item.dirName}}/{{$item.coverFileName}}" />
+        <div class="cover-image-placeholder" else></div>
+        <div class="cover-content">
+          <marquee if="{{shelfMarqueeEnabled}}" scrollamount="30" class="itemtext" text-offset="25">{{$item.name}}</marquee>
+          <text else class="itemtext">{{$item.name}}</text>
+          <marquee if="{{shelfMarqueeEnabled}}" scrollamount="40" class="itemtext2" text-offset="25">{{getProgressSubtitle($item)}}</marquee>
+          <text else class="itemtext2">{{getProgressSubtitle($item)}}</text>
+        </div>
+      </list-item>
+      <list-item type="pagination" class="pagination-container" if="{{totalPages > 1 && displayMode === 'all'}}">
+        <div class="pagination-controls">
+          <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button" />
+          <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
+          <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button" />
+        </div>
+      </list-item>
+    </list>
+    <list class="list" if="{{displayMode === 'category'}}">
+      <list-item type="tip" if="{{showStorageWarning && !selectedCategory}}" class="item" style="background-color: #ad0000;">
+        <text style="color: white;font-size: 21px;">实际可用存储空间不足，将无法正常使用。</text>
+      </list-item>
+      <list-item if="{{selectedCategory}}" class="item" @click="backToCategoryList" type="nook" style="height: 72px;">
+        <text class="itemtext">← 返回分类</text>
+      </list-item>
+      <list-item for="{{visibleBooks}}" class="item {{shelfStyle === 'cover' ? 'cover-item' : ''}}" @click="handleCategoryItemClick($item)" type="nook">
+        <img if="{{shelfStyle === 'cover' && $item.hasRealCover}}" class="cover-image" src="internal://files/books/{{$item.dirName}}/{{$item.coverFileName}}" />
+        <div if="{{shelfStyle === 'cover' && !$item.hasRealCover}}" class="cover-image-placeholder"></div>
+        <div class="{{shelfStyle === 'cover' ? 'cover-content' : 'category-item-content'}}">
+          <marquee if="{{shelfMarqueeEnabled && !$item.isCategory}}" scrollamount="22" text-offset="25" class="itemtext">{{$item.name}}</marquee>
+          <text else class="itemtext">{{$item.name}}</text>
+          <marquee if="{{shelfMarqueeEnabled && !$item.isCategory}}" scrollamount="40" text-offset="25" class="itemtext2">{{getProgressSubtitle($item)}}</marquee>
+          <text else class="itemtext2">{{getProgressSubtitle($item)}}</text>
+        </div>
+      </list-item>
+      <list-item type="pagination" class="pagination-container" if="{{totalPages > 1 && displayMode === 'category'}}">
+        <div class="pagination-controls">
+          <img src="/common/images/pre.png" if="{{currentPage > 0}}" @click="prevPage" class="pagination-button" />
+          <text class="pagination-text">{{currentPage + 1}} / {{totalPages}}</text>
+          <img src="/common/images/next.png" if="{{currentPage < totalPages - 1}}" @click="nextPage" class="pagination-button" />
+        </div>
+      </list-item>
+    </list>
+    <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
+    <img static src="/common/images/more.png" @click="routerTo('more')" style="position: absolute;left: 62.5px;top: 412px;width: 72px;height: 72px;" />
+    <text style="position: absolute;top: 12px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
       {{nowTime}}
     </text>
-    <text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+    <text static style="position: absolute;top: 40px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
       电子书
     </text>
-	</div>
+  </div>
 </template>
+
 
 <script>
 import router from '@system.router';
@@ -258,7 +288,7 @@ padding: 66px 6px;
 
 .item {
   width: 100%;
-  height: 112px;
+  height: 85px;
   padding: 10px 20px;
   margin-bottom: 8px;
   background-color: #262626;
@@ -280,12 +310,30 @@ padding: 66px 6px;
     margin-right: 12px;
 }
 
+.cover-image-placeholder {
+  width: 48px;
+  height: 64px;
+  background-color: #1a1a1a;
+  margin-right: 12px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
 .cover-content {
     flex-direction: column;
     justify-content: space-around;
     align-items: flex-start;
     flex: 1;
     height: 100%;
+}
+
+.category-item-content {
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
 }
 
 .itemtext {
