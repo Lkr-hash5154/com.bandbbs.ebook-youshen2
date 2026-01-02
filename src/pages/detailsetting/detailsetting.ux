@@ -17,7 +17,7 @@
 		  </list-item>
 		  <list-item type="item" class="item" @click="routerTo('readPercent')">
 			  <div class="item-content">
-				  <text class="itemtext" static>跳转百分比</text>
+				  <marquee text-offset="25" scrollamount="20" class="itemtext" static>跳转百分比</marquee>
 				  <text class="itemtext2" static>按百分比跳转</text>
 			  </div>
 			  <img src="/common/images/enter.png" style="width:24px;height: 24px;" static/>

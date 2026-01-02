@@ -41,33 +41,24 @@
             </list-item>
             <list-item class="item {{displayMode === 'all' ? 'item2' : ''}}" @click="selectDisplayMode('all')" type="item">
                 <div class="item-content">
-                    <text class="itemtext" static>展示全部书籍</text>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext" static>展示全部书籍</marquee>
                     <text class="itemtext2" static>显示所有书籍</text>
                 </div>
                 <img if="{{displayMode === 'all'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
             </list-item>
             <list-item class="item {{displayMode === 'category' ? 'item2' : ''}}" @click="selectDisplayMode('category')" type="item">
                 <div class="item-content">
-                    <text class="itemtext" static>展示分类列表</text>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext" static>展示分类列表</marquee>
                     <text class="itemtext2" static>显示分类列表</text>
                 </div>
                 <img if="{{displayMode === 'category'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
-            </list-item>
-            
+            </list-item>  
             <list-item class="item" @click="toggleCategoryPagination" type="item" if="{{displayMode === 'category'}}">
                 <div class="item-content">
                     <text class="itemtext" static>分类分页</text>
-                    <text class="itemtext2" static>分类列表开启分页</text>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext2" static>分类列表开启分页</marquee>
                 </div>
-                <img src="{{categoryPagination ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 48px;"/>
-            </list-item>
-            
-            <list-item class="item" @click="toggleCategoryPagination" type="item" if="{{displayMode === 'category'}}">
-                <div class="item-content">
-                    <text class="itemtext" static>分类分页</text>
-                    <text class="itemtext2" static>分类列表开启分页</text>
-                </div>
-                <img src="{{categoryPagination ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 48px;"/>
+                <img src="{{categoryPagination ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
             </list-item>
             
             <list-item class="item" style="padding: 7px 16px; height: 50px;" type="tip">
@@ -89,7 +80,7 @@
             </list-item>
         </list>
 
-        <img src="/common/images/bt.png" style="position: absolute;left: 0px;top: 338px;width: 192px;height: 182px;" />
+        <img src="/common/images/bt.png" style="position: absolute;left: 0px;top: 308px;width: 192px;height: 182px;" />
         <number style="position: absolute;top:365px" max.static="15" min.static="2" step.static="1" value="{{shelfPageSize}}" @change="changePageSize" unit.static="本" name.static="每页数量"></number>
 
         <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 82px;" />

@@ -21,7 +21,7 @@
 					<text class="item-value" style="font-size: 17px; width: auto; color: {{actualAvailableColor}};">{{actualAvailableStorage}}</text>
 				</div>
 				<progress class="storage-progress" percent="{{storagePercent}}" type="horizontal" style="color: #888;"></progress>
-				<text class="progress-text" style="text-align: center; margin-top: 4px;">{{usedStorage}} / {{usableStorage}}</text>
+				<marquee text-offset="25" scrollamount="20" class="progress-text" style="text-align: center; margin-top: 4px;">{{usedStorage}} / {{usableStorage}}</marquee>
 			</list-item>
 			<list-item class="item" type="info" style="height: 280px; flex-direction: column;">
 				<text class="item-title" style="text-align: center;" static>除书籍以外的总占用</text>

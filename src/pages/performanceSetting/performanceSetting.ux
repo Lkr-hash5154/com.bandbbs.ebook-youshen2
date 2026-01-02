@@ -17,7 +17,7 @@
             </list-item>
             <list-item class="item" @click="togglePreventParagraphSplitting" type="item">
                 <div class="item-content">
-                    <text class="itemtext" static>段落防分割</text>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext" static>段落防分割</marquee>
                     <text class="itemtext2" static>避免段落截断</text>
                 </div>
                 <img src="{{preventParagraphSplitting ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
@@ -38,13 +38,13 @@
             </list-item>
             <list-item class="item" @click="routerTo('marqueeSetting')" type="item">
                 <div class="item-content">
-                    <text class="itemtext" static>跑马灯设置</text>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext" static>跑马灯设置</marquee>
                     <text class="itemtext2" static>各页面跑马灯</text>
                 </div>
                 <img src="/common/images/enter.png" style="width:24px;height: 24px;" static/>
             </list-item>
             <list-item class="item" style="height: 122px;padding: 12px 16px;" type="tip">
-                <text class="itemtext2" style="lines: 3;">调整前猜一猜，为什么这里叫"性能设置"。</text>
+                <text class="itemtext2" style="lines: 3;">调整前猜一猜，为什么这里叫"性能设置"?</text>
             </list-item>
         </list>
 
