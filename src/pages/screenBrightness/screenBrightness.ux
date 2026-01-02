@@ -2,22 +2,21 @@
 <template>
 	<div class="page" style="flex-direction: column;">
 		<div class="item">
-			<text style="font-size: 15px;font-weight:bold;color: rgba(255, 255, 255, 0.6);text-align: center;margin-bottom:25px">跟随系统亮度</text>
-			<img static src="/common/images/Switch_ON.png" style="width: 102px;height: 72px;" @click="toggleFollowSystem" if="{{followSystem}}"/>
-			<img static src="/common/images/Switch_OFF.png" style="width: 102px;height: 72px;" @click="toggleFollowSystem" else/>
-			<text style="font-size: 30px;font-weight:bold;color: white;width: 100%;text-align: center;">
+			<text static style="font-size: 22px;font-weight:bold;color: rgba(255, 255, 255, 0.6);text-align: center;margin-bottom:40px;top: 30px;">跟随系统亮度</text>
+			<img static src="/common/images/Switch_ON.png" style="width: 84px;height: 60px;" @click="toggleFollowSystem" if="{{followSystem}}"/>
+			<img static src="/common/images/Switch_OFF.png" style="width: 84px;height: 60px;" @click="toggleFollowSystem" else/>
+			<text style="font-size: 18px;font-weight:bold;color: white;width: 100%;text-align: center;">
 				{{followSystem ? 'ON' : 'OFF'}}
 			</text>
 		</div>
 
-		<number show="{{!followSystem}}" style="position: absolute; bottom: 6px" max="255" min="10" step="1" unit="" value="{{brightnessValue}}" @change="change" name="自定义亮度">
+		<number show="{{!followSystem}}" style="position: absolute; top: 365px" max.static="255" min.static="10" step.static="1" unit.static="点" value="{{brightnessValue}}" @change="change" name.static="自定义亮度">
 		</number>
 
-		
-		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
-		  {{nowTime}}
-		</text>
-		<text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+        <text style="position: absolute;top: 16px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
+          {{nowTime}}
+        </text>
+        <text static style="position: absolute;top: 36px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
 			屏幕亮度
 		</text>
 	</div>
@@ -25,7 +24,7 @@
 
 <script>
 import router from "@system.router";
-import storage from '../../common/storage.js';
+import storage from '../../utils/storage.js';
 import brightness from '@system.brightness';
 
 const BRIGHTNESS_KEY = "EBOOK_BRIGHTNESS";
@@ -73,7 +72,10 @@ export default {
 		});
 	},
 	onDestroy(){
-	  clearInterval(this.timer);
+	  if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
 	},
     toggleFollowSystem() {
         this.followSystem = !this.followSystem;
@@ -116,15 +118,14 @@ export default {
 
 .item {
 	position: absolute;
-	left: 0px;
-	top: 86px;
-	width: 192px;
-	height: 180px;
-	border-radius: 36px;
+	left: 10px;
+	top: 82px;
+	width: 172px;
+	border-radius: 26px;
 	flex-direction: column;
 	border: 3px solid #262626;
 	align-items: center;
-	justify-content: flex-start;
-	padding: 6px;
+	justify-content: center;
+	padding: 12px;
 }
 </style>

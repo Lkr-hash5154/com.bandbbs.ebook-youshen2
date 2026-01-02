@@ -10,14 +10,14 @@
                     <text class="itemtext" static>列表样式</text>
                     <text class="itemtext2" static>默认的列表样式</text>
                 </div>
-                <img if="{{shelfStyle === 'list'}}" src="/common/images/check.png" style="width:32px;height: 32px;" static />
+                <img if="{{shelfStyle === 'list'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
             </list-item>
             <list-item class="item {{shelfStyle === 'cover' ? 'item2' : ''}}" @click="selectShelfStyle('cover')" type="item">
                 <div class="item-content">
                     <text class="itemtext" static>封面样式</text>
                     <text class="itemtext2" static>展示书籍封面</text>
                 </div>
-                <img if="{{shelfStyle === 'cover'}}" src="/common/images/check.png" style="width:32px;height: 32px;" static />
+                <img if="{{shelfStyle === 'cover'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
             </list-item>
 
             <list-item class="item" @click="toggleLastRead" type="item">
@@ -25,9 +25,17 @@
                     <text class="itemtext" static>上次阅读</text>
                     <text class="itemtext2" static>置顶上次阅读</text>
                 </div>
-                <img src="{{lastReadOnTop ? '/common/images/on.png' : '/common/images/off.png'}}" style="width:40px;height: 28px;"/>
+                <img src="{{lastReadOnTop ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
             </list-item>
             
+            <list-item class="item" @click="toggleStorageWarning" type="item">
+                <div class="item-content">
+                    <text class="itemtext" static>存储提示</text>
+                    <text class="itemtext2" static>存储不足时提示</text>
+                </div>
+                <img src="{{showStorageWarning ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
+            </list-item>
+
             <list-item class="item" style="padding: 7px 16px; height: 50px;" type="tip">
                 <text class="section-title" static>首页展示方式</text>
             </list-item>
@@ -36,14 +44,30 @@
                     <text class="itemtext" static>展示全部书籍</text>
                     <text class="itemtext2" static>显示所有书籍</text>
                 </div>
-                <img if="{{displayMode === 'all'}}" src="/common/images/check.png" style="width:32px;height: 32px;" static />
+                <img if="{{displayMode === 'all'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
             </list-item>
             <list-item class="item {{displayMode === 'category' ? 'item2' : ''}}" @click="selectDisplayMode('category')" type="item">
                 <div class="item-content">
                     <text class="itemtext" static>展示分类列表</text>
                     <text class="itemtext2" static>显示分类列表</text>
                 </div>
-                <img if="{{displayMode === 'category'}}" src="/common/images/check.png" style="width:32px;height: 32px;" static />
+                <img if="{{displayMode === 'category'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
+            </list-item>
+            
+            <list-item class="item" @click="toggleCategoryPagination" type="item" if="{{displayMode === 'category'}}">
+                <div class="item-content">
+                    <text class="itemtext" static>分类分页</text>
+                    <text class="itemtext2" static>分类列表开启分页</text>
+                </div>
+                <img src="{{categoryPagination ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 48px;"/>
+            </list-item>
+            
+            <list-item class="item" @click="toggleCategoryPagination" type="item" if="{{displayMode === 'category'}}">
+                <div class="item-content">
+                    <text class="itemtext" static>分类分页</text>
+                    <text class="itemtext2" static>分类列表开启分页</text>
+                </div>
+                <img src="{{categoryPagination ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:64px;height: 48px;"/>
             </list-item>
             
             <list-item class="item" style="padding: 7px 16px; height: 50px;" type="tip">
@@ -54,25 +78,25 @@
                     <text class="itemtext" static>章节进度</text>
                     <text class="itemtext2" static>仅当前章进度</text>
                 </div>
-                <img if="{{progressMode === 'chapter'}}" src="/common/images/check.png" style="width:32px;height: 32px;" static />
+                <img if="{{progressMode === 'chapter'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
             </list-item>
             <list-item class="item {{progressMode === 'book' ? 'item2' : ''}}" @click="selectProgressMode('book')" type="item">
                 <div class="item-content">
                     <text class="itemtext" static>整本进度</text>
                     <text class="itemtext2" static>全书阅读进度</text>
                 </div>
-                <img if="{{progressMode === 'book'}}" src="/common/images/check.png" style="width:32px;height: 32px;" static />
+                <img if="{{progressMode === 'book'}}" src="/common/images/check.png" style="width:24px;height: 24px;" static />
             </list-item>
         </list>
 
-        <img src="/common/images/bt.png" style="position: absolute;left: 0px;top: 338px;width: 212px;height: 182px;" />
+        <img src="/common/images/bt.png" style="position: absolute;left: 0px;top: 338px;width: 192px;height: 182px;" />
         <number style="position: absolute;top:365px" max.static="15" min.static="2" step.static="1" value="{{shelfPageSize}}" @change="changePageSize" unit.static="本" name.static="每页数量"></number>
 
-        <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 212px;height: 82px;" />
-        <text style="position: absolute;top: 22px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
+        <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 82px;" />
+        <text style="position: absolute;top: 16px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
           {{nowTime}}
         </text>
-        <text static style="position: absolute;top: 42px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
+        <text static style="position: absolute;top: 36px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
             书架设置
         </text>
     </div>
@@ -91,7 +115,9 @@
             shelfPageSize: 5,
             lastReadOnTop: true,
             displayMode: 'all',
-            progressMode: 'book'
+            progressMode: 'book',
+            showStorageWarning: true,
+            categoryPagination: false
         },
         updateTime() {
             const date = new Date();
@@ -127,67 +153,43 @@
                 this.updateTime();
             }, 1000);
             
-            
+            this.loadSettings();
+        },
+        loadSettings() {
             storage.get({
                 key: 'EBOOK_SHELF_STYLE',
-                success: (data) => {
-                    if (data) {
-                        this.shelfStyle = data;
-                    }
-                },
-                fail: () => {
-                    this.shelfStyle = 'list';
-                }
+                success: (data) => { if (data) this.shelfStyle = data; },
+                fail: () => { this.shelfStyle = 'list'; }
             });
-            
-            
             storage.get({
                 key: 'EBOOK_SHELF_PAGE_SIZE',
-                success: (data) => {
-                    if (data) {
-                        this.shelfPageSize = parseInt(data);
-                    }
-                },
-                fail: () => {
-                    this.shelfPageSize = 5;
-                }
+                success: (data) => { if (data) this.shelfPageSize = parseInt(data); },
+                fail: () => { this.shelfPageSize = 5; }
             });
-            
-            
             storage.get({
                 key: 'EBOOK_TOP_LAST_READ',
-                success: (data) => {
-                    this.lastReadOnTop = data === 'true';
-                },
-                fail: () => {
-                    this.lastReadOnTop = true;
-                }
+                success: (data) => { this.lastReadOnTop = data === 'true'; },
+                fail: () => { this.lastReadOnTop = true; }
             });
-            
-            
             storage.get({
                 key: 'EBOOK_HOME_DISPLAY_MODE',
-                success: (data) => {
-                    if (data) {
-                        this.displayMode = data;
-                    }
-                },
-                fail: () => {
-                    this.displayMode = 'all';
-                }
+                success: (data) => { if (data) this.displayMode = data; },
+                fail: () => { this.displayMode = 'all'; }
             });
-            
-            
             storage.get({
                 key: 'EBOOK_HOME_PROGRESS_MODE',
-                success: (data) => {
-                    if (data) {
-                        this.progressMode = data;
-                    }
-                },
-                fail: () => {
-                    this.progressMode = 'book';
-                }
+                success: (data) => { if (data) this.progressMode = data; },
+                fail: () => { this.progressMode = 'book'; }
+            });
+            storage.get({
+                key: 'EBOOK_SHOW_STORAGE_WARNING',
+                success: (data) => { this.showStorageWarning = data !== 'false'; },
+                fail: () => { this.showStorageWarning = true; }
+            });
+            storage.get({
+                key: 'EBOOK_CATEGORY_PAGINATION',
+                success: (data) => { this.categoryPagination = data === 'true'; },
+                fail: () => { this.categoryPagination = false; }
             });
         },
         onDestroy() {
@@ -229,6 +231,20 @@
                 value: this.lastReadOnTop.toString()
             });
         },
+        toggleStorageWarning() {
+            this.showStorageWarning = !this.showStorageWarning;
+            storage.set({
+                key: 'EBOOK_SHOW_STORAGE_WARNING',
+                value: this.showStorageWarning.toString()
+            });
+        },
+        toggleCategoryPagination() {
+            this.categoryPagination = !this.categoryPagination;
+            storage.set({
+                key: 'EBOOK_CATEGORY_PAGINATION',
+                value: this.categoryPagination.toString()
+            });
+        },
         selectDisplayMode(mode) {
             if (this.displayMode === mode) {
                 return;
@@ -255,62 +271,55 @@
             this.lastReadOnTop = true;
             this.displayMode = 'all';
             this.progressMode = 'book';
+            this.showStorageWarning = true;
+            this.categoryPagination = false;
             storage.set({ key: "EBOOK_SHELF_STYLE", value: 'list' });
             storage.set({ key: "EBOOK_SHELF_PAGE_SIZE", value: '5' });
             storage.set({ key: "EBOOK_TOP_LAST_READ", value: 'true' });
             storage.set({ key: "EBOOK_HOME_DISPLAY_MODE", value: 'all' });
             storage.set({ key: "EBOOK_HOME_PROGRESS_MODE", value: 'book' });
+            storage.set({ key: "EBOOK_SHOW_STORAGE_WARNING", value: 'true' });
+            storage.set({ key: "EBOOK_CATEGORY_PAGINATION", value: 'false' });
         },
         back() {
             router.back();
         }
     }
 </script>
+
 <style>
- .page {
-	  width: 192px;
-	  height: 490px;
-	  background-color: #000000;
-  }
-  
-  .more-info {
+.page {
 	width: 192px;
-	background-color: rgb(0,0,0);
-  }
-  
-  .caltext {
-	  width: 192px;
-	  lines: 4;
-	  text-overflow: clip;
-	  font-size: 26px;
-	  color: rgb(255,255,255);
-	  text-align: left;
-	  height: 140px;
-  }
-  
-  .list {
-	  width: 192px;
-	  height: 490px;
-	  position: absolute;
-	  top:0px;
-	  left:0px;
-	padding: 66px 6px;
-  }
-  
-  .item {
+	height: 490px;
+	background-color: #000000;
+}
+
+.list {
+	width: 192px;
+	height: 490px;
+	position: absolute;
+	top:0px;
+	left:0px;
+	padding: 86px 12px;
+    padding-bottom: 190px;
+}
+
+    .item {
 	  width: 100%;
-	  height: 112px;
-	  padding: 10px 20px;
+	  height: 85px;
+	  padding: 12px 18px;
 	  margin-bottom: 8px;
 	  background-color: #262626;
-	  border-radius: 36px;
+	  border-radius: 26px;
 	  align-items: center;
 	justify-content: space-between;
   }
+    .item2 {
+        background-color: #0D6EFF !important;
+    }
   
   .itemtext {
-	  font-size: 24px;
-	  line-height:40px;
+	  font-size: 23px;
 	  width: 100%;
 	  font-weight: bold;
 	  color: white;
@@ -319,21 +328,24 @@
   }
   
   .itemtext2 {
-	  font-size: 24px;
-	  line-height: 32px;
+	  font-size: 16px;
 	  font-weight: bold;
 	  color: rgba(255,255,255,0.6);
 	  text-overflow: ellipsis;
 	  lines: 1;
   }
-  
-  
-  .item-content {
-	  height: 100%;
-	  flex:1;
-	  flex-direction: column;
-	  justify-content: space-between;
-  }
-  </style>
 
+    .item-content {
+        height: 100%;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
+    .section-title {
+        font-size: 21px;
+        line-height: 36px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.5);
+    }
+</style>

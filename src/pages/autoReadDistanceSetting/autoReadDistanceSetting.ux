@@ -5,20 +5,24 @@
 	  <div class="preview-container">
 		  <div class="preview-screen">
 			  <div class="content-area">
-				  <text class="preview-text">
+				  <text static class="preview-text">
 					  自动翻页
 				  </text>
 			  </div>
 		  </div>
-			  <text style="position: absolute;left: 0px;top: 220px;width: 192px;line-height: 32px;font-weight:bold;font-size:15px;color:rgba(255,255,255,0.6);text-align:center;">自动翻页时滚动的距离</text>
+		  <div class="info-panel">
+			  <text static class="info-title">翻页距离</text>
+			  <text class="info-value">{{ distanceValue }}%</text>
+			  <text static class="info-desc">自动翻页时滚动的距离</text>
+		  </div>
 	  </div>
 	  
-	  <number style="position: absolute;bottom:6px" max="120" min="10" step="5" value="{{ distanceValue }}" @change="change" name="调整距离"></number>
+	  <number style="position: absolute;top:365px;" max.static="120" min.static="10" step.static="5" unit.static="%" value="{{ distanceValue }}" @change="change" name.static="调整距离"></number>
   
-		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+	  <text style="position: absolute;top: 16px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
 		  {{nowTime}}
 		</text>
-		<text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		<text static style="position: absolute;top: 36px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
 			翻页距离
 		</text>
 	</div>
@@ -26,7 +30,7 @@
   
   <script>
   import router from '@system.router'
-  import storage from '../../common/storage.js'
+  import storage from '../../utils/storage.js'
   
   const DISTANCE_KEY = 'EBOOK_AUTO_READ_DISTANCE';
   const DEFAULT_DISTANCE = 100;
@@ -79,7 +83,10 @@
 		  });
 	  },
 	  onDestroy(){
-		clearInterval(this.timer);
+		if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
 	  },
 	  change(e) {
 		  this.distanceValue = e.detail.value;
@@ -102,82 +109,84 @@
   </script>
   
   <style>
-  .page {
-	  width: 192px;
-	  height: 490px;
-	  background-color: #000000;
-  }
+.page {
+	width: 192px;
+	height: 490px;
+	background-color: #000000;
+}
   
-  .preview-container {
-	  position: absolute;
-	  left: 0px;
-	  top: 20px;
-	  width: 192px;
-	  height: 310px;
-	  flex-direction: column;
-	  justify-content: space-around;
-	  align-items: center;
-	  padding: 6px;
-  }
-  
-  .preview-screen {
-	  width: 112px;
-	  height: 120px;
-	  background-color: #1a1a1a;
-	  border-radius: 20px;
-	  border: 3px solid #333333;
-	  flex-direction: column;
-	  overflow: hidden;
-	  position: relative;
-  }
-  
-  .content-area {
-	  flex: 1;
-	  width: 100%;
-	  background-color: #262626;
-	  align-items: center;
-	  justify-content: center;
-	  padding: 8px;
-  }
-  
-  .preview-text {
-	  font-size: 18px;
-	  font-weight: bold;
-	  color: white;
-	  text-align: center;
-	  lines: 3;
-	  text-overflow: ellipsis;
-  }
-  
-  .info-panel {
-	  flex-direction: column;
-	  align-items: center;
-	  justify-content: center;
-	  flex: 1;
-	  margin-left: 0px;
-	  margin-top: 0px;
-  }
-  
-  .info-title {
-	  font-size: 24px;
-	  font-weight: bold;
-	  color: white;
-	  line-height: 32px;
-	  margin-bottom: 6px;
-  }
-  
-  .info-value {
-	  font-size: 40px;
-	  font-weight: bold;
-	  color: #0D6EFF;
-	  line-height: 48px;
-	  margin-bottom: 10px;
-  }
-  
-  .info-desc {
-	  font-size: 18px;
-	  color: rgba(255,255,255,0.6);
-	  line-height: 26px;
-	  text-align: center;
-  }
+.preview-container {
+	position: absolute;
+	left: 10px;
+	top: 86px;
+	width: 172px;
+	height: 280px;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+}
+
+.preview-screen {
+	width: 106px;
+	height: 260px;
+	background-color: #1a1a1a;
+	border-radius: 53px;
+	border: 3px solid #333333;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.margin-indicator {
+	width: 100%;
+	background: linear-gradient(180deg, #0D6EFF 0%, #0D6EFF 100%);
+	opacity: 0.3;
+}
+
+.content-area {
+	flex: 1;
+	width: 100%;
+	background-color: #262626;
+	align-items: center;
+	justify-content: center;
+	padding: 8px;
+}
+
+.preview-text {
+	font-size: 16px;
+	font-weight: bold;
+	color: white;
+	text-align: center;
+	text-overflow: ellipsis;
+}
+
+.info-panel {
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex: 1;
+	margin-left: 10px;
+}
+
+.info-title {
+	font-size: 21px;
+	font-weight: bold;
+	color: white;
+	margin-bottom: 6px;
+	text-align: center;
+}
+
+.info-value {
+	font-size: 28px;
+	font-weight: bold;
+	color: #0D6EFF;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.info-desc {
+	font-size: 14px;
+	color: rgba(255,255,255,0.6);
+	text-align: center;
+}
   </style>

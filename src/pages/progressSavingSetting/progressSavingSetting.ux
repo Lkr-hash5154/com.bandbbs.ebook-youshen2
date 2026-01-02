@@ -1,25 +1,30 @@
 <import name="number" src="../../components/number_choose/number_choose"></import>
 <template>
 	<div class="page" style="flex-direction: column">
+		<div class="item">
+			<text static style="font-size: 21px; color: white; text-align: left; padding: 20px; lines: 5;">
+				选择阅读器保存阅读进度的方式。
+			</text>
+		</div>
+
         <div class="setting-group">
             <div class="setting-item" @click="changeMode('exit')">
-                <marquee text-offset="25" scrollamount="20" class="setting-label">退出时保存</marquee>
-                <img class="radio-icon" if="{{saveMode === 'exit'}}" src="/common/images/check.png" />
+                <text class="setting-label">退出时保存</text>
+                <img class="radio-icon" if="{{saveMode === 'exit'}}" src="/common/images/check.png" style="width: 32px;height: 32px;" />
             </div>
             <div class="setting-item" @click="changeMode('periodic')">
-                <marquee text-offset="25" scrollamount="20" class="setting-label">定时保存</marquee>
-                <img class="radio-icon" if="{{saveMode === 'periodic'}}" src="/common/images/check.png" />
+                <text class="setting-label">定时保存</text>
+                <img class="radio-icon" if="{{saveMode === 'periodic'}}" src="/common/images/check.png" style="width: 32px;height: 32px;" />
             </div>
         </div>
 
-		<number if="{{saveMode === 'periodic'}}" style="position: absolute; bottom: 6px" max.static="60" min.static="1" step.static="1" unit.static="秒" value="{{saveInterval}}" @change="change" name.static="保存间隔">
+		<number if="{{saveMode === 'periodic'}}" style="position: absolute;top:365px;" max.static="60" min.static="1" step.static="1" unit.static="秒" value="{{saveInterval}}" @change="change" name.static="保存间隔">
 		</number>
 
-        <img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
-        <text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
-          {{nowTime}}
-        </text>
-        <text static style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		<text style="position: absolute;top: 16px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
+		  {{nowTime}}
+		</text>
+		<text static style="position: absolute;top: 36px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
 			进度保存
 		</text>
 	</div>
@@ -27,7 +32,7 @@
 
 <script>
 import router from "@system.router";
-import storage from '../../common/storage.js';
+import storage from '../../utils/storage.js';
 const MODE_STORAGE_KEY = "EBOOK_PROGRESS_SAVE_MODE";
 const INTERVAL_STORAGE_KEY = "EBOOK_PROGRESS_SAVE_INTERVAL";
 const DEFAULT_MODE = "exit";
@@ -113,8 +118,8 @@ export default {
 
 <style>
 .page {
-	  width: 192px;
-	  height: 490px;
+	width: 192px;
+	height: 490px;
 	background-color: #000000;
 }
 .item {
@@ -122,7 +127,6 @@ export default {
     margin-top: 102px;
 }
 .setting-group {
-    margin-top: 102px;
     padding: 14px 20px;
     background-color: #262626;
 	border-radius: 36px;
@@ -132,13 +136,13 @@ export default {
 }
 .setting-item {
     width: 100%;
-    height: 80px;
+    height: 60px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 .setting-label {
-    font-size: 28px;
+    font-size: 18px;
     color: white;
 }
 .radio-icon {

@@ -1,48 +1,54 @@
 <template>
 	<div class="page">
 		<list class="list" style="padding: 86px 6px 6px 6px;">
-			<!-- 封面图片（如果有）作为列表的第一项 -->
-			<list-item if="{{hasCover}}" type="cover" style="height: 192px; align-items: center; justify-content: center; margin-bottom: 12px;">
-				<img src="{{coverPath}}" style="width: 120px;height: 160px;object-fit: cover;border-radius: 12px;" />
+			<list-item if="{{hasCover}}" type="cover" style="height: 255px; align-items: center; justify-content: center; margin-bottom: 12px;">
+				<img src="{{coverPath}}" style="width: 160px;height: 213px;object-fit: cover;border-radius: 12px;" />
 			</list-item>
-			
 			<list-item class="item" type="info">
-				<text class="item-title">文件名</text>
-				<marquee class="item-value" scrollamount="50" text-offset="25">{{fileName}}</marquee>
+				<text class="item-title" static>文件名</text>
+				<marquee if="{{bookinfoMarqueeEnabled}}" class="item-value" scrollamount="50" text-offset="25">{{fileName}}</marquee>
+				<text else class="item-value">{{fileName}}</text>
 			</list-item>
 			<list-item class="item" type="info" if="{{author}}">
-				<text class="item-title">作者</text>
-				<marquee class="item-value" scrollamount="50" text-offset="25">{{author}}</marquee>
+				<text class="item-title" static>作者</text>
+				<marquee if="{{bookinfoMarqueeEnabled}}" class="item-value" scrollamount="50" text-offset="25">{{author}}</marquee>
+				<text else class="item-value">{{author}}</text>
 			</list-item>
-			<list-item class="item" type="info" style="height: 280px; flex-direction: column;">
-				<text class="item-title">占用空间</text>
-				<marquee scrollamount="20" class="item-value">{{totalStorage}}</marquee>
-				<div style="width: 100%; height: 1px; background-color: rgba(255,255,255,0.2); margin: 8px 0px;"></div>
-				<text class="item-title" style="font-size: 20px;">章节占用</text>
-				<text class="item-value" style="font-size: 20px;">{{chapterStorage}}</text>
-				<text class="item-title" style="font-size: 20px;">封面占用</text>
-				<text class="item-value" style="font-size: 20px;">{{coverStorage}}</text>
-				<text class="item-title" style="font-size: 20px;">索引占用</text>
-				<text class="item-value" style="font-size: 20px;">{{indexStorage}}</text>
+			<list-item class="item" type="info" style="height: 240px; flex-direction: column;">
+				<text class="item-title" static>占用空间</text>
+				<text class="item-value" style="width: auto;">{{totalStorage}}</text>
+				<div static style="width: 100%; height: 1px; background-color: rgba(255,255,255,0.2); margin: 6px 0px;"></div>
+				<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
+					<text class="item-title" style="font-size: 18px;" static>章节占用</text>
+					<text class="item-value" style="font-size: 18px; width: auto;">{{chapterStorage}}</text>
+				</div>
+				<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
+					<text class="item-title" style="font-size: 18px;" static>封面占用</text>
+					<text class="item-value" style="font-size: 18px; width: auto;">{{coverStorage}}</text>
+				</div>
+				<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
+					<text class="item-title" style="font-size: 18px;" static>索引占用</text>
+					<text class="item-value" style="font-size: 18px; width: auto;">{{indexStorage}}</text>
+				</div>
 				<div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
 					<text class="item-title" style="font-size: 18px;" static>书签占用</text>
 					<text class="item-value" style="font-size: 18px; width: auto;">{{bookmarkIndexStorage}}</text>
 				</div>
 			</list-item>
 			<list-item class="item" type="info">
-				<text class="item-title">同步进度</text>
-				<marquee class="item-value" scrollamount="50" text-offset="25">{{syncProgress}}</marquee>
+				<text class="item-title" static>同步进度</text>
+				<text class="item-value">{{syncProgress}}</text>
 			</list-item>
 			<list-item class="item" type="info">
-				<text class="item-title">总字数</text>
-				<marquee scrollamount="20" class="item-value">{{wordCount}}</marquee>
+				<text class="item-title" static>总字数</text>
+				<text class="item-value">{{wordCount}}</text>
 			</list-item>
 			<list-item class="item" type="info" if="{{bookStatus}}">
-				<text class="item-title">状态</text>
+				<text class="item-title" static>状态</text>
 				<text class="item-value">{{bookStatus}}</text>
 			</list-item>
 			<list-item class="item" type="info" if="{{category}}">
-				<text class="item-title">分类</text>
+				<text class="item-title" static>分类</text>
 				<text class="item-value">{{category}}</text>
 			</list-item>
 			<list-item class="item" type="info" if="{{localCategory}}">
@@ -50,22 +56,19 @@
 				<text class="item-value">{{localCategory}}</text>
 			</list-item>
 			<list-item class="item" type="summary" if="{{summary}}" @click="showSummary">
-				<text class="item-title">书籍简介</text>
-				<text class="item-value" style="color: rgba(255,255,255,0.8);">点击查看→</text>
+				<text class="item-title" static>书籍简介</text>
+				<text class="item-value" style="color: rgba(255,255,255,0.8);" static>点击查看 →</text>
 			</list-item>
 		</list>
-
-		<img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 102px;" />
-		
-		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+		<img static src="/common/images/hd.png" style="position: absolute;left: 0px;top: 0px;width: 192px;height: 82px;" />
+		<text style="position: absolute;top: 16px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
 			{{nowTime}}
 		</text>
-		<text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		<text static style="position: absolute;top: 36px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
 			书籍详情
 		</text>
 	</div>
 </template>
-
 <script>
 import router from '@system.router'
 import file from '@system.file'
@@ -269,7 +272,6 @@ export default {
 	back() { router.back(); }
 }
 </script>
-
 <style>
 .page {
 	width: 192px;
@@ -285,28 +287,27 @@ export default {
 }
 .item {
 	width: 100%;
-	height: 112px;
-	padding: 14px 20px;
-	margin-bottom: 8px;
+	height: 102px;
+	padding: 10px 14px;
+	margin-bottom: 6px;
 	background-color: #262626;
-	border-radius: 36px;
+	border-radius: 26px;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: space-around;
 }
 .item-title {
-	font-size: 24px;
-	line-height: 32px;
+	font-size: 19px;
+	line-height: 24px;
 	font-weight: bold;
 	color: rgba(255,255,255,0.6);
 }
 .item-value {
-	font-size: 28px;
-	line-height: 36px;
+	font-size: 22px;
+	line-height: 28px;
 	width: 100%;
 	font-weight: bold;
 	color: white;
-	text-overflow: ellipsis;
 	lines: 1;
 }
 </style>

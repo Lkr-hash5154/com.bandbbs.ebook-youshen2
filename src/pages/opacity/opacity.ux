@@ -4,16 +4,16 @@
 
 		<div class="item">
 			<text style="font-size: {{fontSize}}px;font-weight: bold;color: white;opacity:{{opacity/100}};text-overflow: ellipsis;">
-				文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本
+				文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览文本预览
 			</text>
 		</div>
-		<number style="position: absolute; bottom: 6px" max="100" min="10" step="1" unit="%" value="{{opacity}}" @change="change" name="当前亮度">
+		<number style="position: absolute; top: 365px" max.static="100" min.static="10" step.static="1" unit.static="%" value="{{opacity}}" @change="change" name.static="当前亮度">
 		</number>
 
-		<text style="position: absolute;left: 44px;top: 12px;width: 104px;line-height: 32px;font-weight:bold;font-size:20px;color:rgba(255,255,255,0.6);text-align:center;">
+		<text style="position: absolute;top: 16px;width: 192px;line-height: 32px;font-weight:bold;font-size:18px;color:rgba(255,255,255,0.6);text-align:center;">
 		  {{nowTime}}
 		</text>
-		<text style="position: absolute;left: 24px;top: 40px;width: 144px;line-height: 42px;font-weight:bold;font-size:28px;color:white;text-align:center;">
+		<text static style="position: absolute;top: 36px;width: 192px;line-height: 42px;font-weight:bold;font-size:26px;color:white;text-align:center;">
 			字体亮度
 		</text>
 	</div>
@@ -21,12 +21,10 @@
 
 <script>
 import router from "@system.router";
-import storage from '../../common/storage.js';
+import storage from '../../utils/storage.js';
 import app from "@system.app";
 
 export default {
-	// ÷﹢‐+-＋－×÷％
-	// 页面级组件的数据模型，影响传入数据的覆盖机制：private内定义的属性不允许被覆盖
 	private: {
 		lineHeight: 34,
 		fontSize: 28,
@@ -39,7 +37,6 @@ export default {
 		let hours = date.getHours();
 		let minutes = date.getMinutes();
 
-		// 格式化小时和分钟为两位数
 		hours = hours < 10 ? '0' + hours : hours;
 		minutes = minutes < 10 ? '0' + minutes : minutes;
 
@@ -71,7 +68,10 @@ export default {
 		})
 	},
 	onDestroy(){
-	  clearInterval(this.timer);
+	  if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
 	},
 	change(e) {
 		this.opacity = e.detail.value;
@@ -109,15 +109,14 @@ export default {
 
 .item {
 	position: absolute;
-	left: 0px;
-	top: 86px;
-	width: 192px;
-	height: 184px;
-	border-radius: 36px;
+	left: 10px;
+	top: 82px;
+	width: 172px;
+	border-radius: 26px;
 	flex-direction: column;
 	border: 3px solid #262626;
 	align-items: center;
 	justify-content: center;
-	padding: 20px;
+	padding: 12px;
 }
 </style>

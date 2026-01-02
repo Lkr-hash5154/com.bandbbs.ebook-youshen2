@@ -1,8 +1,8 @@
 {
   "package": "com.bandbbs.ebook.plus",
   "name": "电子书",
-  "versionName": "4.6.4.BAND9",
-  "versionCode": 251113,
+  "versionName": "4.6.5.BAND9",
+  "versionCode": 260101,
   "minPlatformVersion": 1100,
   "icon": "/common/logo.png",
   "simulationVersion": "default",
@@ -48,9 +48,6 @@
     },
     {
       "name": "system.vibrator"
-    },
-    {
-      "name": "system.battery"
     }
   ],
   "config": {
@@ -171,10 +168,13 @@
       },
       "pages/storageManagement": {
         "component": "storageManagement"
+      },
+      "pages/extraContentSetting": {
+        "component": "extraContentSetting"
       }
+    }
   },
   "display": {
     "backgroundColor": "#000000"
-    }
   }
 }
