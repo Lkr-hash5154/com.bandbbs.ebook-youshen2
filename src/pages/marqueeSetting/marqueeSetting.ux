@@ -31,21 +31,21 @@
 		</list-item>
 		<list-item class="item" @click="toggleTextReaderMarquee" type="item">
 			<div class="item-content">
-				<text class="itemtext" static>书籍阅读器</text>
+				<marquee text-offset="25" scrollamount="20" class="itemtext" static>书籍阅读器</marquee>
 				<text class="itemtext2" static>页面标题滚动</text>
 			</div>
 			<img src="{{textReaderMarqueeEnabled ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
 		</list-item>
 		<list-item class="item" @click="toggleDetailProgressMarquee" type="item">
 			<div class="item-content">
-				<text class="itemtext" static>书籍阅读器</text>
+				<marquee scrollamount="20" text-offset="25" class="itemtext" static>书籍阅读器</marquee>
 				<text class="itemtext2" static>底部进度滚动</text>
 			</div>
 			<img src="{{detailProgressMarqueeEnabled ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
 		</list-item>
 		<list-item class="item" @click="toggleDetailMarquee" type="item">
 			<div class="item-content">
-				<text class="itemtext" static>文本阅读页</text>
+				<marquee text-offset="25" scrollamount="20" class="itemtext" static>文本阅读页</marquee>
 				<text class="itemtext2" static>页面标题滚动</text>
 			</div>
 			<img src="{{detailMarqueeEnabled ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
