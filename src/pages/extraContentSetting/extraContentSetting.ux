@@ -3,22 +3,22 @@
         <list class="list">
             <list-item class="item" @click="toggleEmptyLines" type="item">
                 <div class="item-content">
-                    <marquee marquee-offset="25" scrollamount="20" class="itemtext" static>章节开头空行</marquee>
-                    <marquee marquee-offset="25" scrollamount="20" class="itemtext2" static>每章开头增加空行</marquee>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext" static>章节开头空行</marquee>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext2" static>每章开头增加空行</marquee>
                 </div>
                 <img src="{{emptyLines ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
             </list-item>
             <list-item class="item" @click="toggleNumber" type="item">
                 <div class="item-content">
-                    <marquee class="itemtext" static>显示章节编号</marquee>
-                    <marquee class="itemtext2" static>每章开头显示编号</marquee>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext" static>显示章节编号</marquee>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext2" static>每章开头显示编号</marquee>
                 </div>
                 <img src="{{showNumber ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
             </list-item>
             <list-item class="item" @click="toggleName" type="item">
                 <div class="item-content">
-                    <marquee class="itemtext" static>显示章节名称</marquee>
-                    <marquee class="itemtext2" static>每章开头显示名称</marquee>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext" static>显示章节名称</marquee>
+                    <marquee text-offset="25" scrollamount="20" class="itemtext2" static>每章开头显示名称</marquee>
                 </div>
                 <img src="{{showName ? '/common/images/Switch_ON.png' : '/common/images/Switch_OFF.png'}}" style="width:32px;height: 24px;"/>
             </list-item>
